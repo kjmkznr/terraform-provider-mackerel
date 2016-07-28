@@ -21,8 +21,9 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"mackerel_host_monitor": resourceMackerelHostMonitor(),
-			"mackerel_dashboard":    resourceMackerelDashboard(),
+			"mackerel_host_monitor":       resourceMackerelHostMonitor(),
+			"mackerel_expression_monitor": resourceMackerelExpressionMonitor(),
+			"mackerel_dashboard":          resourceMackerelDashboard(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
