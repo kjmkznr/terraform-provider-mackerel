@@ -9,11 +9,13 @@ import (
 
 func resourceMackerelServiceMonitor() *schema.Resource {
 	return &schema.Resource{
-		Create:   resourceMackerelServiceMonitorCreate,
-		Read:     resourceMackerelServiceMonitorRead,
-		Update:   resourceMackerelServiceMonitorUpdate,
-		Delete:   resourceMackerelServiceMonitorDelete,
-		Importer: nil,
+		Create: resourceMackerelServiceMonitorCreate,
+		Read:   resourceMackerelServiceMonitorRead,
+		Update: resourceMackerelServiceMonitorUpdate,
+		Delete: resourceMackerelServiceMonitorDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{

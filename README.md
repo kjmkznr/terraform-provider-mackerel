@@ -150,7 +150,6 @@ $ MACKEREL_API_KEY=xxxx make testacc
 TODO
 ----
 
-* Support import resource
 * Support data source
 
 
