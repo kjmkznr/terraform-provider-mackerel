@@ -65,7 +65,7 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorServiceMetric{
 		Type:                 "service",
 		Name:                 d.Get("name").(string),
 		Service:              d.Get("service").(string),
@@ -83,8 +83,8 @@ func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.ID)
-	d.SetId(monitor.ID)
+	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.MonitorID())
+	d.SetId(monitor.MonitorID())
 
 	return resourceMackerelServiceMonitorRead(d, meta)
 }
@@ -99,17 +99,18 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 	}
 
 	for _, monitor := range monitors {
-		if monitor.ID == d.Id() {
-			d.Set("id", monitor.ID)
-			d.Set("name", monitor.Name)
-			d.Set("service", monitor.Service)
-			d.Set("duration", monitor.Duration)
-			d.Set("metric", monitor.Metric)
-			d.Set("operator", monitor.Operator)
-			d.Set("warning", monitor.Warning)
-			d.Set("critical", monitor.Critical)
-			d.Set("notification_interval", monitor.NotificationInterval)
-			d.Set("is_mute", monitor.IsMute)
+		if monitor.MonitorType() == "service" && monitor.MonitorID() == d.Id() {
+			mon := monitor.(*mackerel.MonitorServiceMetric)
+			d.Set("id", mon.ID)
+			d.Set("name", mon.Name)
+			d.Set("service", mon.Service)
+			d.Set("duration", mon.Duration)
+			d.Set("metric", mon.Metric)
+			d.Set("operator", mon.Operator)
+			d.Set("warning", mon.Warning)
+			d.Set("critical", mon.Critical)
+			d.Set("notification_interval", mon.NotificationInterval)
+			d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}
@@ -120,7 +121,7 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorServiceMetric{
 		Type:                 "service",
 		Name:                 d.Get("name").(string),
 		Service:              d.Get("service").(string),

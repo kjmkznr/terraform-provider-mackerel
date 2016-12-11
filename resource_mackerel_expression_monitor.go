@@ -57,7 +57,7 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorExpression{
 		Type:                 "expression",
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),
@@ -73,8 +73,8 @@ func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.ID)
-	d.SetId(monitor.ID)
+	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.MonitorID())
+	d.SetId(monitor.MonitorID())
 
 	return resourceMackerelExpressionMonitorRead(d, meta)
 }
@@ -89,15 +89,16 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 	}
 
 	for _, monitor := range monitors {
-		if monitor.ID == d.Id() {
-			d.Set("id", monitor.ID)
-			d.Set("name", monitor.Name)
-			d.Set("expression", monitor.Expression)
-			d.Set("operator", monitor.Operator)
-			d.Set("warning", monitor.Warning)
-			d.Set("critical", monitor.Critical)
-			d.Set("notification_interval", monitor.NotificationInterval)
-			d.Set("is_mute", monitor.IsMute)
+		if monitor.MonitorType() == "expression" && monitor.MonitorID() == d.Id() {
+			mon := monitor.(*mackerel.MonitorExpression)
+			d.Set("id", mon.MonitorID())
+			d.Set("name", mon.MonitorName())
+			d.Set("expression", mon.Expression)
+			d.Set("operator", mon.Operator)
+			d.Set("warning", mon.Warning)
+			d.Set("critical", mon.Critical)
+			d.Set("notification_interval", mon.NotificationInterval)
+			d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}
@@ -108,7 +109,7 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorExpression{
 		Type:                 "expression",
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),

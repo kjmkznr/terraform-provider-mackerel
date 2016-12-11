@@ -71,7 +71,7 @@ func resourceMackerelHostMonitor() *schema.Resource {
 func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorHostMetric{
 		Type:                 "host",
 		Name:                 d.Get("name").(string),
 		Duration:             uint64(d.Get("duration").(int)),
@@ -96,8 +96,8 @@ func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.ID)
-	d.SetId(monitor.ID)
+	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.MonitorID())
+	d.SetId(monitor.MonitorID())
 
 	return resourceMackerelHostMonitorRead(d, meta)
 }
@@ -112,18 +112,19 @@ func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	for _, monitor := range monitors {
-		if monitor.ID == d.Id() {
-			d.Set("id", monitor.ID)
-			d.Set("name", monitor.Name)
-			d.Set("duration", monitor.Duration)
-			d.Set("metric", monitor.Metric)
-			d.Set("operator", monitor.Operator)
-			d.Set("warning", monitor.Warning)
-			d.Set("critical", monitor.Critical)
-			d.Set("notification_interval", monitor.NotificationInterval)
-			d.Set("scopes", flattenStringList(monitor.Scopes))
-			d.Set("exclude_scopes", flattenStringList(monitor.ExcludeScopes))
-			d.Set("is_mute", monitor.IsMute)
+		if monitor.MonitorType() == "host" && monitor.MonitorID() == d.Id() {
+			mon := monitor.(*mackerel.MonitorHostMetric)
+			d.Set("id", mon.ID)
+			d.Set("name", mon.Name)
+			d.Set("duration", mon.Duration)
+			d.Set("metric", mon.Metric)
+			d.Set("operator", mon.Operator)
+			d.Set("warning", mon.Warning)
+			d.Set("critical", mon.Critical)
+			d.Set("notification_interval", mon.NotificationInterval)
+			d.Set("scopes", flattenStringList(mon.Scopes))
+			d.Set("exclude_scopes", flattenStringList(mon.ExcludeScopes))
+			d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}
@@ -134,7 +135,7 @@ func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) e
 func resourceMackerelHostMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.Monitor{
+	input := &mackerel.MonitorHostMetric{
 		Type:                 "host",
 		Name:                 d.Get("name").(string),
 		Duration:             uint64(d.Get("duration").(int)),

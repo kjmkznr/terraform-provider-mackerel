@@ -86,8 +86,8 @@ func resourceMackerelExternalMonitorCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.ID)
-	d.SetId(monitor.ID)
+	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.MonitorID())
+	d.SetId(monitor.MonitorID())
 
 	return resourceMackerelExternalMonitorRead(d, meta)
 }
@@ -102,20 +102,21 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 	}
 
 	for _, monitor := range monitors {
-		if monitor.ID == d.Id() {
-			d.Set("id", monitor.ID)
-			d.Set("name", monitor.Name)
-			d.Set("url", monitor.URL)
-			d.Set("service", monitor.Service)
-			d.Set("notification_interval", monitor.NotificationInterval)
-			d.Set("response_time_duration", monitor.ResponseTimeDuration)
-			d.Set("response_time_warning", monitor.ResponseTimeWarning)
-			d.Set("response_time_critical", monitor.ResponseTimeCritical)
-			d.Set("contains_string", monitor.ContainsString)
-			d.Set("max_check_attempts", monitor.MaxCheckAttempts)
-			d.Set("certification_expiration_warning", monitor.CertificationExpirationWarning)
-			d.Set("certification_expiration_critical", monitor.CertificationExpirationCritical)
-			d.Set("is_mute", monitor.IsMute)
+		if monitor.MonitorType() == "external" && monitor.MonitorID() == d.Id() {
+			mon := monitor.(*mackerel.MonitorExternalHTTP)
+			d.Set("id", mon.MonitorID())
+			d.Set("name", mon.MonitorName())
+			d.Set("url", mon.URL)
+			d.Set("service", mon.Service)
+			d.Set("notification_interval", mon.NotificationInterval)
+			d.Set("response_time_duration", mon.ResponseTimeDuration)
+			d.Set("response_time_warning", mon.ResponseTimeWarning)
+			d.Set("response_time_critical", mon.ResponseTimeCritical)
+			d.Set("contains_string", mon.ContainsString)
+			d.Set("max_check_attempts", mon.MaxCheckAttempts)
+			d.Set("certification_expiration_warning", mon.CertificationExpirationWarning)
+			d.Set("certification_expiration_critical", mon.CertificationExpirationCritical)
+			d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}
@@ -150,8 +151,8 @@ func resourceMackerelExternalMonitorDelete(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.Monitor {
-	input := &mackerel.Monitor{
+func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorExternalHTTP {
+	input := &mackerel.MonitorExternalHTTP{
 		Type: "external",
 		Name: d.Get("name").(string),
 		URL:  d.Get("url").(string),
