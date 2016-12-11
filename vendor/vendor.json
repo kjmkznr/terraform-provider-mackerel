@@ -165,6 +165,12 @@
 			"revisionTime": "2014-04-22T17:41:19Z"
 		},
 		{
+			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "346938d642f2ec3594ed81d874461961cd0faa76",
+			"revisionTime": "2016-10-29T20:57:26Z"
+		},
+		{
 			"checksumSHA1": "70+TVBeBd1kBT0jD7HdxyGmMxo8=",
 			"path": "github.com/go-ini/ini",
 			"revision": "2ba15ac2dc9cdf88c110ec2dc0ced7fa45f5678c",
@@ -291,6 +297,12 @@
 			"revisionTime": "2016-12-09T19:41:26Z"
 		},
 		{
+			"checksumSHA1": "vt+P9D2yWDO3gdvdgCzwqunlhxU=",
+			"path": "github.com/hashicorp/logutils",
+			"revision": "0dc08b1671f34c4250ce212759ebd880f743d883",
+			"revisionTime": "2015-06-09T07:04:31Z"
+		},
+		{
 			"checksumSHA1": "qHcXAjiuegQxSuEmSoi2tZ0nXoM=",
 			"path": "github.com/hashicorp/terraform/config",
 			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
@@ -315,6 +327,12 @@
 			"revisionTime": "2016-12-10T21:45:47Z"
 		},
 		{
+			"checksumSHA1": "uT6Q9RdSRAkDjyUgQlJ2XKJRab4=",
+			"path": "github.com/hashicorp/terraform/helper/config",
+			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
+			"revisionTime": "2016-12-10T21:45:47Z"
+		},
+		{
 			"checksumSHA1": "go1fw84tUwRRBgwOKrMtWPtPCno=",
 			"path": "github.com/hashicorp/terraform/helper/experiment",
 			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
@@ -329,6 +347,18 @@
 		{
 			"checksumSHA1": "B267stWNQd0/pBTXHfI/tJsxzfc=",
 			"path": "github.com/hashicorp/terraform/helper/hilmapstructure",
+			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
+			"revisionTime": "2016-12-10T21:45:47Z"
+		},
+		{
+			"checksumSHA1": "aT1yD5hJRvtpl1F8C3wVGZDFV7Y=",
+			"path": "github.com/hashicorp/terraform/helper/logging",
+			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
+			"revisionTime": "2016-12-10T21:45:47Z"
+		},
+		{
+			"checksumSHA1": "4Ab9uJEBaT0AoHH6kqD9qKRwwOY=",
+			"path": "github.com/hashicorp/terraform/helper/resource",
 			"revision": "c02b2471d64d0013ae427a908ab0df6dda472955",
 			"revisionTime": "2016-12-10T21:45:47Z"
 		},
