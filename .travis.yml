@@ -10,8 +10,8 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key: 
-    secure: $GITHUB_TOKEN
+  api_key:
+    secure: eYbugQyh0y80Yc2FHOoL964q7ETSofsKpUA97SwsEouzkOB//6ABIar2XxNuOn05yPPX+dt40vMp5JfVcJRvBbidEQMwTnEvP/JdpGuTUI9GAseagtD4G14lYtuOVBIy81zcw/lONpfKUV935FhcHm17B3xoLtRfGyAkZlOibQYe8PtUOKjifjZIHhQJ9dmI4EOEM7ndUvSiF0sh3HnHwSCaPhkycRXo6zia4QTYQtNqvU5EhWTb7CFxIeZEetCUjCl98F/lKdld6CDVZwKvVrFW7ovfXgRkEFejCyW9t80cNA+jhwZh7V5S51rpLXDS4XFjODbHCr1vT5/6Ztc3cLPmC8cxITrIWtFJoNY978FQpOg3exYdsR+eNRo+6V3NI+oEWYEGKw2qAySHmMR07jW0xLNIU/kTkcglyyjdK/tH2Ui8WxyyK8J5actXeoKTnvWnrSPE0pIigK++3sSoZn8Gwr30G82Dp4ddalycenu9Hp7xyX2O+/elyV9W9Jp437GgIWXiRmShNyq2wPwYqSkw1WuhW2nVXjddw58XF1XWtrGWrZK8Bda7dSiMufg42RKDfIh7dJLxgQgbuZaTtOL40bpoD8x+F6o/fHvzDERepudXXy9u4EC87RNVS4S3cp/ILkK8fcsbVaQLKky28XezDjfDFpgkZUCl48Pv9Jk=
   file_glob: true
   file: 'pkg/*.zip'
   on:
