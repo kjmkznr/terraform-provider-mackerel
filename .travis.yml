@@ -4,6 +4,17 @@ go:
   - 1.7
 script:
   - make test vet
+  - ./scripts/build.sh
 branches:
   only:
   - master
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: 
+    secure: $GITHUB_TOKEN
+  file_glob: true
+  file: 'pkg/*.zip'
+  on:
+    tags: true
