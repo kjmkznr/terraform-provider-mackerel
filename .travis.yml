@@ -4,10 +4,8 @@ go:
   - 1.7
 script:
   - make test vet
+before_deploy:
   - ./scripts/build.sh
-branches:
-  only:
-  - master
 
 deploy:
   provider: releases
@@ -17,4 +15,5 @@ deploy:
   file_glob: true
   file: 'pkg/*.zip'
   on:
+    all_branches: true
     tags: true
