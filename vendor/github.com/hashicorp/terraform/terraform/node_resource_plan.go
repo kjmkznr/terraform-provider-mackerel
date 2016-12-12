@@ -31,7 +31,6 @@ func (n *NodePlannableResource) EvalTree() EvalNode {
 			// into the proper number of instances.
 			&EvalInterpolate{Config: n.Config.RawCount},
 
-			&EvalCountCheckComputed{Resource: n.Config},
 			&EvalCountFixZeroOneBoundary{Resource: n.Config},
 		},
 	}
@@ -101,10 +100,6 @@ func (n *NodePlannableResource) DynamicExpand(ctx EvalContext) (*Graph, error) {
 	}
 
 	// Build the graph
-	b := &BasicGraphBuilder{
-		Steps:    steps,
-		Validate: true,
-		Name:     "NodePlannableResource",
-	}
+	b := &BasicGraphBuilder{Steps: steps, Validate: true}
 	return b.Build(ctx.Path())
 }

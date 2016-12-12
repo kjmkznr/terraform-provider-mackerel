@@ -291,22 +291,16 @@ func (d *ModuleDiff) String() string {
 		switch {
 		case rdiff.RequiresNew() && (rdiff.GetDestroy() || rdiff.GetDestroyTainted()):
 			crud = "DESTROY/CREATE"
-		case rdiff.GetDestroy() || rdiff.GetDestroyDeposed():
+		case rdiff.GetDestroy():
 			crud = "DESTROY"
 		case rdiff.RequiresNew():
 			crud = "CREATE"
 		}
 
-		extra := ""
-		if !rdiff.GetDestroy() && rdiff.GetDestroyDeposed() {
-			extra = " (deposed only)"
-		}
-
 		buf.WriteString(fmt.Sprintf(
-			"%s: %s%s\n",
+			"%s: %s\n",
 			crud,
-			name,
-			extra))
+			name))
 
 		keyLen := 0
 		rdiffAttrs := rdiff.CopyAttributes()
@@ -362,7 +356,6 @@ type InstanceDiff struct {
 	mu             sync.Mutex
 	Attributes     map[string]*ResourceAttrDiff
 	Destroy        bool
-	DestroyDeposed bool
 	DestroyTainted bool
 }
 
@@ -437,7 +430,7 @@ func (d *InstanceDiff) ChangeType() DiffChangeType {
 		return DiffDestroyCreate
 	}
 
-	if d.GetDestroy() || d.GetDestroyDeposed() {
+	if d.GetDestroy() {
 		return DiffDestroy
 	}
 
@@ -456,10 +449,7 @@ func (d *InstanceDiff) Empty() bool {
 
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return !d.Destroy &&
-		!d.DestroyTainted &&
-		!d.DestroyDeposed &&
-		len(d.Attributes) == 0
+	return !d.Destroy && !d.DestroyTainted && len(d.Attributes) == 0
 }
 
 // Equal compares two diffs for exact equality.
@@ -492,7 +482,6 @@ func (d *InstanceDiff) GoString() string {
 		Attributes:     d.Attributes,
 		Destroy:        d.Destroy,
 		DestroyTainted: d.DestroyTainted,
-		DestroyDeposed: d.DestroyDeposed,
 	})
 }
 
@@ -525,20 +514,6 @@ func (d *InstanceDiff) requiresNew() bool {
 	}
 
 	return false
-}
-
-func (d *InstanceDiff) GetDestroyDeposed() bool {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
-	return d.DestroyDeposed
-}
-
-func (d *InstanceDiff) SetDestroyDeposed(b bool) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
-	d.DestroyDeposed = b
 }
 
 // These methods are properly locked, for use outside other InstanceDiff

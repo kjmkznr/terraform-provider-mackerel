@@ -54,10 +54,7 @@ func resourceProvider(t, alias string) string {
 
 	idx := strings.IndexRune(t, '_')
 	if idx == -1 {
-		// If no underscores, the resource name is assumed to be
-		// also the provider name, e.g. if the provider exposes
-		// only a single resource of each type.
-		return t
+		return ""
 	}
 
 	return t[:idx]
