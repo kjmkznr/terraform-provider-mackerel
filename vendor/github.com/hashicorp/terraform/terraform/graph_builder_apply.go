@@ -33,26 +33,24 @@ type ApplyGraphBuilder struct {
 
 	// Destroy, if true, represents a pure destroy operation
 	Destroy bool
-
-	// Validate will do structural validation of the graph.
-	Validate bool
 }
 
 // See GraphBuilder
 func (b *ApplyGraphBuilder) Build(path []string) (*Graph, error) {
 	return (&BasicGraphBuilder{
 		Steps:    b.Steps(),
-		Validate: b.Validate,
-		Name:     "ApplyGraphBuilder",
+		Validate: true,
+		Name:     "apply",
 	}).Build(path)
 }
 
 // See GraphBuilder
 func (b *ApplyGraphBuilder) Steps() []GraphTransformer {
 	// Custom factory for creating providers.
-	concreteProvider := func(a *NodeAbstractProvider) dag.Vertex {
+	providerFactory := func(name string, path []string) GraphNodeProvider {
 		return &NodeApplyableProvider{
-			NodeAbstractProvider: a,
+			NameValue: name,
+			PathValue: path,
 		}
 	}
 
@@ -89,7 +87,7 @@ func (b *ApplyGraphBuilder) Steps() []GraphTransformer {
 		),
 
 		// Create all the providers
-		&MissingProviderTransformer{Providers: b.Providers, Concrete: concreteProvider},
+		&MissingProviderTransformer{Providers: b.Providers, Factory: providerFactory},
 		&ProviderTransformer{},
 		&DisableProviderTransformer{},
 		&ParentProviderTransformer{},

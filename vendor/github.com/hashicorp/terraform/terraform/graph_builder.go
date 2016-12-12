@@ -29,15 +29,6 @@ type BasicGraphBuilder struct {
 
 func (b *BasicGraphBuilder) Build(path []string) (*Graph, error) {
 	g := &Graph{Path: path}
-
-	debugName := "graph.json"
-	if b.Name != "" {
-		debugName = b.Name + "-" + debugName
-	}
-	debugBuf := dbug.NewFileWriter(debugName)
-	g.SetDebugWriter(debugBuf)
-	defer debugBuf.Close()
-
 	for _, step := range b.Steps {
 		if step == nil {
 			continue
@@ -49,18 +40,20 @@ func (b *BasicGraphBuilder) Build(path []string) (*Graph, error) {
 			stepName = stepName[dot+1:]
 		}
 
-		debugOp := g.DebugOperation(stepName, "")
 		err := step.Transform(g)
 
-		errMsg := ""
-		if err != nil {
-			errMsg = err.Error()
+		// always log the graph state to see what transformations may have happened
+		debugName := "build-" + stepName
+		if b.Name != "" {
+			debugName = b.Name + "-" + debugName
 		}
-		debugOp.End(errMsg)
 
 		log.Printf(
 			"[TRACE] Graph after step %T:\n\n%s",
 			step, g.StringWithNodeTypes())
+
+		dg, _ := NewDebugGraph(debugName, g, nil)
+		dbug.WriteGraph(dg)
 
 		if err != nil {
 			return g, err
@@ -125,7 +118,7 @@ func (b *BuiltinGraphBuilder) Build(path []string) (*Graph, error) {
 	basic := &BasicGraphBuilder{
 		Steps:    b.Steps(path),
 		Validate: b.Validate,
-		Name:     "BuiltinGraphBuilder",
+		Name:     "builtin",
 	}
 
 	return basic.Build(path)

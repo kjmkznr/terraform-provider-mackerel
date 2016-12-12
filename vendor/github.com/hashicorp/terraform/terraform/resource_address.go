@@ -102,9 +102,6 @@ func (r *ResourceAddress) stateId() string {
 	default:
 		panic(fmt.Errorf("unknown resource mode: %s", r.Mode))
 	}
-	if r.Index >= 0 {
-		result += fmt.Sprintf(".%d", r.Index)
-	}
 
 	return result
 }

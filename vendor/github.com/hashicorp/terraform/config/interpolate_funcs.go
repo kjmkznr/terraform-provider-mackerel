@@ -15,7 +15,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/apparentlymart/go-cidr/cidr"
 	"github.com/hashicorp/go-uuid"
@@ -86,7 +85,6 @@ func Funcs() map[string]ast.Function {
 		"signum":       interpolationFuncSignum(),
 		"sort":         interpolationFuncSort(),
 		"split":        interpolationFuncSplit(),
-		"timestamp":    interpolationFuncTimestamp(),
 		"title":        interpolationFuncTitle(),
 		"trimspace":    interpolationFuncTrimSpace(),
 		"upper":        interpolationFuncUpper(),
@@ -1107,17 +1105,6 @@ func interpolationFuncUUID() ast.Function {
 		ReturnType: ast.TypeString,
 		Callback: func(args []interface{}) (interface{}, error) {
 			return uuid.GenerateUUID()
-		},
-	}
-}
-
-// interpolationFuncTimestamp
-func interpolationFuncTimestamp() ast.Function {
-	return ast.Function{
-		ArgTypes:   []ast.Type{},
-		ReturnType: ast.TypeString,
-		Callback: func(args []interface{}) (interface{}, error) {
-			return time.Now().UTC().Format(time.RFC3339), nil
 		},
 	}
 }
