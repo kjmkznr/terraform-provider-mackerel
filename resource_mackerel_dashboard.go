@@ -18,19 +18,19 @@ func resourceMackerelDashboard() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"title": &schema.Schema{
+			"title": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"body_markdown": &schema.Schema{
+			"body_markdown": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"url_path": &schema.Schema{
+			"url_path": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateUrlPathWord,

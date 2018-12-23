@@ -15,7 +15,7 @@ func TestAccMackerelHostMonitor_Basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelHostMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -48,7 +48,7 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelHostMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -71,7 +71,7 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 						"mackerel_host_monitor.foobar", "exclude_scopes.#", "0"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelHostMonitorConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -104,7 +104,7 @@ func TestAccMackerelHostMonitor_Minimum(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelHostMonitorConfig_minimum,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

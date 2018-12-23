@@ -15,7 +15,7 @@ func TestAccMackerelDashboard_Basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelDashboardConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -36,7 +36,7 @@ func TestAccMackerelDashboard_Update(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelDashboardConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -47,7 +47,7 @@ func TestAccMackerelDashboard_Update(t *testing.T) {
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n* List1\n* List2\n"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelDashboardConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

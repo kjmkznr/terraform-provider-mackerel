@@ -18,43 +18,43 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"service": &schema.Schema{
+			"service": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"duration": &schema.Schema{
+			"duration": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"metric": &schema.Schema{
+			"metric": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"operator": &schema.Schema{
+			"operator": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"warning": &schema.Schema{
+			"warning": {
 				Type:     schema.TypeFloat,
 				Required: true,
 			},
-			"critical": &schema.Schema{
+			"critical": {
 				Type:     schema.TypeFloat,
 				Required: true,
 			},
-			"notification_interval": &schema.Schema{
+			"notification_interval": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"is_mute": &schema.Schema{
+			"is_mute": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},

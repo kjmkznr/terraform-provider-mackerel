@@ -15,7 +15,7 @@ func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelServiceMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -46,7 +46,7 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelServiceMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -67,7 +67,7 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelServiceMonitorConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -98,7 +98,7 @@ func TestAccMackerelServiceMonitor_Minimum(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelServiceMonitorConfig_minimum,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

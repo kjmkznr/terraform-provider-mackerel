@@ -15,7 +15,7 @@ func TestAccMackerelExpressionMonitor_Basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExpressionMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -42,7 +42,7 @@ func TestAccMackerelExpressionMonitor_Update(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExpressionMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -59,7 +59,7 @@ func TestAccMackerelExpressionMonitor_Update(t *testing.T) {
 						"mackerel_expression_monitor.foobar", "notification_interval", "10"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExpressionMonitorConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -86,7 +86,7 @@ func TestAccMackerelExpressionMonitor_Minimum(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExpressionMonitorConfig_minimum,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(

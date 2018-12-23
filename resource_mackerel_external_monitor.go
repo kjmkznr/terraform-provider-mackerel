@@ -18,58 +18,58 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"url": &schema.Schema{
+			"url": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"service": &schema.Schema{
+			"service": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"notification_interval": &schema.Schema{
+			"notification_interval": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"response_time_warning": &schema.Schema{
+			"response_time_warning": {
 				Type:     schema.TypeFloat,
 				Optional: true,
 			},
-			"response_time_critical": &schema.Schema{
+			"response_time_critical": {
 				Type:     schema.TypeFloat,
 				Optional: true,
 			},
-			"response_time_duration": &schema.Schema{
+			"response_time_duration": {
 				Type:     schema.TypeFloat,
 				Optional: true,
 				//ValidateFunc: validateDurationTime 1 minute - 10 minute
 			},
-			"contains_string": &schema.Schema{
+			"contains_string": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"max_check_attempts": &schema.Schema{
+			"max_check_attempts": {
 				Type:     schema.TypeFloat,
 				Optional: true,
 				Default:  1,
 				//ValidateFunc: validateDurationTime 1 - 10
 			},
-			"certification_expiration_warning": &schema.Schema{
+			"certification_expiration_warning": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"certification_expiration_critical": &schema.Schema{
+			"certification_expiration_critical": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"is_mute": &schema.Schema{
+			"is_mute": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},

@@ -15,7 +15,7 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExternalMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -52,7 +52,7 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExternalMonitorConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -79,7 +79,7 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExternalMonitorConfig_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -116,7 +116,7 @@ func TestAccMackerelExternalMonitor_Minimum(t *testing.T) {
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccCheckMackerelExternalMonitorConfig_minimum,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
