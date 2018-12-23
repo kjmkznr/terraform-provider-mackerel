@@ -6,6 +6,8 @@ default: test vet
 
 tools:
 	go get -u github.com/kardianos/govendor
+	go get -u github.com/alecthomas/gometalinter
+	gometalinter --install
 
 clean:
 	rm -Rf $(CURDIR)/bin/*
@@ -31,5 +33,8 @@ vet: fmt
 fmt:
 	gofmt -w $(GOFMT_FILES)
 
+lint:
+	@echo "==> Checking source code against linters..."
+	@gometalinter ./
 
-.PHONY: default test vet fmt
+.PHONY: default test vet fmt tools lint
