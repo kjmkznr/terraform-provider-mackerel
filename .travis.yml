@@ -3,7 +3,7 @@ language: go
 go:
   - 1.8
 script:
-  - make test vet
+  - make test vet lint
 before_deploy:
   - ./scripts/build.sh
 
