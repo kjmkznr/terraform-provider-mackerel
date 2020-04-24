@@ -5,7 +5,6 @@ GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
 default: test vet
 
 tools:
-	go get -u github.com/kardianos/govendor
 	go get -u github.com/alecthomas/gometalinter
 	gometalinter --install
 
@@ -13,7 +12,7 @@ clean:
 	rm -Rf $(CURDIR)/bin/*
 
 build: clean vet
-	govendor build -o $(CURDIR)/bin/terraform-provider-mackerel $(CURDIR)/builtin/bins/provider-mackerel/main.go
+	go build -o $(CURDIR)/bin/terraform-provider-mackerel $(CURDIR)/builtin/bins/provider-mackerel/main.go
 
 test: vet
 	TF_ACC= go test $(TEST) $(TESTARGS) -timeout=30s -parallel=4
