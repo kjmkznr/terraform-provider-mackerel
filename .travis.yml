@@ -1,7 +1,7 @@
 sudo: false
 language: go
 go:
-  - 1.8
+  - 1.14
 script:
   - make test vet lint
 before_deploy:
