@@ -68,10 +68,10 @@ func resourceMackerelDashboardRead(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	d.Set("id", dashboard.ID)
-	d.Set("title", dashboard.Title)
-	d.Set("body_markdown", dashboard.BodyMarkDown)
-	d.Set("url_path", dashboard.URLPath)
+	_ = d.Set("id", dashboard.ID)
+	_ = d.Set("title", dashboard.Title)
+	_ = d.Set("body_markdown", dashboard.BodyMarkDown)
+	_ = d.Set("url_path", dashboard.URLPath)
 
 	return nil
 }

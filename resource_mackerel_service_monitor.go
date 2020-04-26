@@ -101,16 +101,16 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "service" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorServiceMetric)
-			d.Set("id", mon.ID)
-			d.Set("name", mon.Name)
-			d.Set("service", mon.Service)
-			d.Set("duration", mon.Duration)
-			d.Set("metric", mon.Metric)
-			d.Set("operator", mon.Operator)
-			d.Set("warning", mon.Warning)
-			d.Set("critical", mon.Critical)
-			d.Set("notification_interval", mon.NotificationInterval)
-			d.Set("is_mute", mon.IsMute)
+			_ = d.Set("id", mon.ID)
+			_ = d.Set("name", mon.Name)
+			_ = d.Set("service", mon.Service)
+			_ = d.Set("duration", mon.Duration)
+			_ = d.Set("metric", mon.Metric)
+			_ = d.Set("operator", mon.Operator)
+			_ = d.Set("warning", mon.Warning)
+			_ = d.Set("critical", mon.Critical)
+			_ = d.Set("notification_interval", mon.NotificationInterval)
+			_ = d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}

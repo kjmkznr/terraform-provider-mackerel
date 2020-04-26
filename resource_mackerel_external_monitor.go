@@ -104,19 +104,19 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "external" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorExternalHTTP)
-			d.Set("id", mon.MonitorID())
-			d.Set("name", mon.MonitorName())
-			d.Set("url", mon.URL)
-			d.Set("service", mon.Service)
-			d.Set("notification_interval", mon.NotificationInterval)
-			d.Set("response_time_duration", mon.ResponseTimeDuration)
-			d.Set("response_time_warning", mon.ResponseTimeWarning)
-			d.Set("response_time_critical", mon.ResponseTimeCritical)
-			d.Set("contains_string", mon.ContainsString)
-			d.Set("max_check_attempts", mon.MaxCheckAttempts)
-			d.Set("certification_expiration_warning", mon.CertificationExpirationWarning)
-			d.Set("certification_expiration_critical", mon.CertificationExpirationCritical)
-			d.Set("is_mute", mon.IsMute)
+			_ = d.Set("id", mon.MonitorID())
+			_ = d.Set("name", mon.MonitorName())
+			_ = d.Set("url", mon.URL)
+			_ = d.Set("service", mon.Service)
+			_ = d.Set("notification_interval", mon.NotificationInterval)
+			_ = d.Set("response_time_duration", mon.ResponseTimeDuration)
+			_ = d.Set("response_time_warning", mon.ResponseTimeWarning)
+			_ = d.Set("response_time_critical", mon.ResponseTimeCritical)
+			_ = d.Set("contains_string", mon.ContainsString)
+			_ = d.Set("max_check_attempts", mon.MaxCheckAttempts)
+			_ = d.Set("certification_expiration_warning", mon.CertificationExpirationWarning)
+			_ = d.Set("certification_expiration_critical", mon.CertificationExpirationCritical)
+			_ = d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}

@@ -91,14 +91,14 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "expression" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorExpression)
-			d.Set("id", mon.MonitorID())
-			d.Set("name", mon.MonitorName())
-			d.Set("expression", mon.Expression)
-			d.Set("operator", mon.Operator)
-			d.Set("warning", mon.Warning)
-			d.Set("critical", mon.Critical)
-			d.Set("notification_interval", mon.NotificationInterval)
-			d.Set("is_mute", mon.IsMute)
+			_ = d.Set("id", mon.MonitorID())
+			_ = d.Set("name", mon.MonitorName())
+			_ = d.Set("expression", mon.Expression)
+			_ = d.Set("operator", mon.Operator)
+			_ = d.Set("warning", mon.Warning)
+			_ = d.Set("critical", mon.Critical)
+			_ = d.Set("notification_interval", mon.NotificationInterval)
+			_ = d.Set("is_mute", mon.IsMute)
 			break
 		}
 	}

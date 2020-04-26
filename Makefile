@@ -5,8 +5,7 @@ GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
 default: test vet
 
 tools:
-	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install
+	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.25.0
 
 clean:
 	rm -Rf $(CURDIR)/bin/*
@@ -34,6 +33,6 @@ fmt:
 
 lint:
 	@echo "==> Checking source code against linters..."
-	@gometalinter ./
+	@golangci-lint run
 
 .PHONY: default test vet fmt tools lint
