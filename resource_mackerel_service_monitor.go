@@ -72,8 +72,8 @@ func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              pfloat64(d.Get("warning").(float64)),
+		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
@@ -128,8 +128,8 @@ func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              pfloat64(d.Get("warning").(float64)),
+		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}

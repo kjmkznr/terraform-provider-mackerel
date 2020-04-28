@@ -21,7 +21,7 @@ require (
 	github.com/jmespath/go-jmespath v0.0.0-20160803190731-bd40a432e4c7 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
-	github.com/mackerelio/mackerel-client-go v0.0.0-20161202071213-b0cd137c66a4
+	github.com/mackerelio/mackerel-client-go v0.9.1
 	github.com/mitchellh/copystructure v0.0.0-20161013195342-5af94aef99f5 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v0.0.0-20170116052023-ab25296c0f51 // indirect

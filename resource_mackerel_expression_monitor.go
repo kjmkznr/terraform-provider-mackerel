@@ -62,8 +62,8 @@ func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interf
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              pfloat64(d.Get("warning").(float64)),
+		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
@@ -114,8 +114,8 @@ func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interf
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              pfloat64(d.Get("warning").(float64)),
+		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}

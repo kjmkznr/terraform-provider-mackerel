@@ -15,3 +15,11 @@ func flattenStringList(list []string) []interface{} {
 	}
 	return vs
 }
+
+func pfloat64(x float64) *float64 {
+	return &x
+}
+
+func puint64(x uint64) *uint64 {
+	return &x
+}
