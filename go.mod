@@ -16,7 +16,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hil v0.0.0-20161209194126-543808c44b24 // indirect
 	github.com/hashicorp/logutils v0.0.0-20150609070431-0dc08b1671f3 // indirect
-	github.com/hashicorp/terraform v0.9.2
+	github.com/hashicorp/terraform v0.12.24
 	github.com/hashicorp/yamux v0.0.0-20160720233140-d1caa6c97c9f // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20160803190731-bd40a432e4c7 // indirect
 	github.com/kr/text v0.2.0 // indirect
