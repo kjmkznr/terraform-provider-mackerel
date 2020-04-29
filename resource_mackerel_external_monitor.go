@@ -165,7 +165,7 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 		input.NotificationInterval = uint64(v.(int))
 	}
 	if v, ok := d.GetOk("response_time_duration"); ok {
-		input.ResponseTimeDuration = puint64(v.(uint64))
+		input.ResponseTimeDuration = puint64(uint64(v.(float64)))
 	}
 	if v, ok := d.GetOk("response_time_warning"); ok {
 		input.ResponseTimeWarning = pfloat64(v.(float64))
@@ -177,13 +177,13 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 		input.ContainsString = v.(string)
 	}
 	if v, ok := d.GetOk("max_check_attempts"); ok {
-		input.MaxCheckAttempts = v.(uint64)
+		input.MaxCheckAttempts = uint64(v.(float64))
 	}
 	if v, ok := d.GetOk("certification_expiration_warning"); ok {
-		input.CertificationExpirationWarning = puint64(v.(uint64))
+		input.CertificationExpirationWarning = puint64(uint64(v.(int)))
 	}
 	if v, ok := d.GetOk("certification_expiration_critical"); ok {
-		input.CertificationExpirationCritical = puint64(v.(uint64))
+		input.CertificationExpirationCritical = puint64(uint64(v.(int)))
 	}
 	if v, ok := d.GetOk("is_mute"); ok {
 		input.IsMute = v.(bool)
