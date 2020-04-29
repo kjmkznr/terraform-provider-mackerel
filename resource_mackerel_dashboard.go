@@ -18,10 +18,6 @@ func resourceMackerelDashboard() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"title": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -68,7 +64,7 @@ func resourceMackerelDashboardRead(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	_ = d.Set("id", dashboard.ID)
+	d.SetId(dashboard.ID)
 	_ = d.Set("title", dashboard.Title)
 	_ = d.Set("body_markdown", dashboard.BodyMarkDown)
 	_ = d.Set("url_path", dashboard.URLPath)
