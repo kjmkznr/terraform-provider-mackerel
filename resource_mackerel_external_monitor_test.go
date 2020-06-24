@@ -46,6 +46,8 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "method", "GET"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "memo", "XXX"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "request_body", "{\"request\": \"body\"}"),
 				),
 			},
 		},
@@ -182,6 +184,7 @@ resource "mackerel_external_monitor" "foobar" {
 
 	skip_certificate_verification = false
 
+    request_body = "{\"request\": \"body\"}"
     memo = "XXX"
 }`
 

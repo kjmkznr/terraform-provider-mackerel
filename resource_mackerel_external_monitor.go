@@ -86,6 +86,10 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validation.StringLenBetween(0, 250),
 			},
+			"request_body": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -133,6 +137,7 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("skip_certificate_verification", mon.SkipCertificateVerification)
 			_ = d.Set("method", mon.Method)
 			_ = d.Set("memo", mon.Memo)
+			_ = d.Set("request_body", mon.RequestBody)
 			break
 		}
 	}
@@ -212,6 +217,9 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	}
 	if v, ok := d.GetOk("memo"); ok {
 		input.Memo = v.(string)
+	}
+	if v, ok := d.GetOk("request_body"); ok {
+		input.RequestBody = v.(string)
 	}
 
 	return input

@@ -116,6 +116,7 @@ resource "mackerel_external_monitor" "foobar" {
 
     skip_certificate_verification = false
 
+    request_body = "{\"request\": \"body\"}"
     memo = "This monitor is for Terraform.io."
 }
 ```
