@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -80,6 +81,11 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateMethodWord,
 			},
+			"memo": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringLenBetween(0, 250),
+			},
 		},
 	}
 }
@@ -126,6 +132,7 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("is_mute", mon.IsMute)
 			_ = d.Set("skip_certificate_verification", mon.SkipCertificateVerification)
 			_ = d.Set("method", mon.Method)
+			_ = d.Set("memo", mon.Memo)
 			break
 		}
 	}
@@ -202,6 +209,9 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	}
 	if v, ok := d.GetOk("method"); ok {
 		input.Method = v.(string)
+	}
+	if v, ok := d.GetOk("memo"); ok {
+		input.Memo = v.(string)
 	}
 
 	return input

@@ -44,6 +44,8 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "method", "GET"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "memo", "XXX"),
 				),
 			},
 		},
@@ -179,6 +181,8 @@ resource "mackerel_external_monitor" "foobar" {
 	certification_expiration_critical = 10
 
 	skip_certificate_verification = false
+
+    memo = "XXX"
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_update = `

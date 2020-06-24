@@ -115,6 +115,8 @@ resource "mackerel_external_monitor" "foobar" {
     certification_expiration_critical = 10
 
     skip_certificate_verification = false
+
+    memo = "This monitor is for Terraform.io."
 }
 ```
 
