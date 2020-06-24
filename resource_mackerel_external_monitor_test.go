@@ -48,6 +48,8 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "memo", "XXX"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "request_body", "{\"request\": \"body\"}"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "headers.API-Key", "xxxxxx"),
 				),
 			},
 		},
@@ -120,6 +122,8 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "skip_certificate_verification", "true"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "method", "POST"),
+					resource.TestCheckNoResourceAttr(
+						"mackerel_external_monitor.foobar", "headers.API-Key"),
 				),
 			},
 		},
@@ -185,6 +189,11 @@ resource "mackerel_external_monitor" "foobar" {
 	skip_certificate_verification = false
 
     request_body = "{\"request\": \"body\"}"
+    headers = {
+        "Content-Type" = "application/json",
+        "API-Key" = "xxxxxx",
+    }
+
     memo = "XXX"
 }`
 

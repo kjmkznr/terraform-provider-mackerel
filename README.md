@@ -117,6 +117,11 @@ resource "mackerel_external_monitor" "foobar" {
     skip_certificate_verification = false
 
     request_body = "{\"request\": \"body\"}"
+    headers = {
+        "Content-Type" = "application/json",
+        "API-Key" = "xxxxxx",
+    }
+
     memo = "This monitor is for Terraform.io."
 }
 ```

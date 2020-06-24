@@ -90,6 +90,11 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"headers": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -138,6 +143,7 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("method", mon.Method)
 			_ = d.Set("memo", mon.Memo)
 			_ = d.Set("request_body", mon.RequestBody)
+			_ = d.Set("headers", mon.Headers)
 			break
 		}
 	}
@@ -221,6 +227,22 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	if v, ok := d.GetOk("request_body"); ok {
 		input.RequestBody = v.(string)
 	}
+	if v, ok := d.GetOk("headers"); ok {
+		input.Headers = readHeaders(v.(map[string]interface{}))
+	}
 
 	return input
+}
+
+func readHeaders(h map[string]interface{}) []mackerel.HeaderField {
+	headers := make([]mackerel.HeaderField, 0, len(h))
+	for k, v := range h {
+		header := mackerel.HeaderField{
+			Name:  k,
+			Value: v.(string),
+		}
+		headers = append(headers, header)
+	}
+
+	return headers
 }
