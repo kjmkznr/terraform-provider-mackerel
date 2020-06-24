@@ -42,6 +42,8 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "GET"),
 				),
 			},
 		},
@@ -81,6 +83,8 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "GET"),
 				),
 			},
 			{
@@ -110,6 +114,8 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "30"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "skip_certificate_verification", "true"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "POST"),
 				),
 			},
 		},
@@ -179,6 +185,7 @@ const testAccCheckMackerelExternalMonitorConfig_update = `
 resource "mackerel_external_monitor" "foobar" {
     name                   = "terraform_for_mackerel_test_foobar_upd"
 	url                    = "https://terraform.io/"
+    method                 = "POST"
     service                = "Web"
     notification_interval  = 10
 	response_time_duration = 10

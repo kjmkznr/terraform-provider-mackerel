@@ -102,6 +102,7 @@ Configure a external url monitor.
 resource "mackerel_external_monitor" "foobar" {
     name                   = "terraform_for_mackerel_test_foobar"
     url                    = "https://terraform.io/"
+    method                 = "GET"
     service                = "Web"
     notification_interval  = 10
     response_time_duration = 5
