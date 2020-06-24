@@ -69,6 +69,10 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
+			"skip_certificate_verification": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -113,6 +117,7 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("certification_expiration_warning", mon.CertificationExpirationWarning)
 			_ = d.Set("certification_expiration_critical", mon.CertificationExpirationCritical)
 			_ = d.Set("is_mute", mon.IsMute)
+			_ = d.Set("skip_certificate_verification", mon.SkipCertificateVerification)
 			break
 		}
 	}
@@ -183,6 +188,9 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	}
 	if v, ok := d.GetOk("is_mute"); ok {
 		input.IsMute = v.(bool)
+	}
+	if v, ok := d.GetOk("skip_certificate_verification"); ok {
+		input.SkipCertificateVerification = v.(bool)
 	}
 
 	return input

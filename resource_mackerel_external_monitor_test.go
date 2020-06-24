@@ -40,6 +40,8 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "30"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
 				),
 			},
 		},
@@ -77,6 +79,8 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "30"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
 				),
 			},
 			{
@@ -104,6 +108,8 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "60"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "30"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "true"),
 				),
 			},
 		},
@@ -165,6 +171,8 @@ resource "mackerel_external_monitor" "foobar" {
 
 	certification_expiration_warning  = 30
 	certification_expiration_critical = 10
+
+	skip_certificate_verification = false
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_update = `
@@ -181,6 +189,8 @@ resource "mackerel_external_monitor" "foobar" {
 
 	certification_expiration_warning  = 60
 	certification_expiration_critical = 30
+
+	skip_certificate_verification = true
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_minimum = `
