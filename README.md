@@ -102,6 +102,7 @@ Configure a external url monitor.
 resource "mackerel_external_monitor" "foobar" {
     name                   = "terraform_for_mackerel_test_foobar"
     url                    = "https://terraform.io/"
+    method                 = "GET"
     service                = "Web"
     notification_interval  = 10
     response_time_duration = 5
@@ -112,6 +113,16 @@ resource "mackerel_external_monitor" "foobar" {
 
     certification_expiration_warning  = 30
     certification_expiration_critical = 10
+
+    skip_certificate_verification = false
+
+    request_body = "{\"request\": \"body\"}"
+    headers = {
+        "Content-Type" = "application/json",
+        "API-Key" = "xxxxxx",
+    }
+
+    memo = "This monitor is for Terraform.io."
 }
 ```
 

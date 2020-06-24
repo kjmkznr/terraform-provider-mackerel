@@ -40,6 +40,16 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "30"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "GET"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "memo", "XXX"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "request_body", "{\"request\": \"body\"}"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "headers.API-Key", "xxxxxx"),
 				),
 			},
 		},
@@ -77,6 +87,10 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "30"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "false"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "GET"),
 				),
 			},
 			{
@@ -104,6 +118,12 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 						"mackerel_external_monitor.foobar", "certification_expiration_warning", "60"),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "certification_expiration_critical", "30"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "skip_certificate_verification", "true"),
+					resource.TestCheckResourceAttr(
+						"mackerel_external_monitor.foobar", "method", "POST"),
+					resource.TestCheckNoResourceAttr(
+						"mackerel_external_monitor.foobar", "headers.API-Key"),
 				),
 			},
 		},
@@ -165,12 +185,23 @@ resource "mackerel_external_monitor" "foobar" {
 
 	certification_expiration_warning  = 30
 	certification_expiration_critical = 10
+
+	skip_certificate_verification = false
+
+    request_body = "{\"request\": \"body\"}"
+    headers = {
+        "Content-Type" = "application/json",
+        "API-Key" = "xxxxxx",
+    }
+
+    memo = "XXX"
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_update = `
 resource "mackerel_external_monitor" "foobar" {
     name                   = "terraform_for_mackerel_test_foobar_upd"
 	url                    = "https://terraform.io/"
+    method                 = "POST"
     service                = "Web"
     notification_interval  = 10
 	response_time_duration = 10
@@ -181,6 +212,8 @@ resource "mackerel_external_monitor" "foobar" {
 
 	certification_expiration_warning  = 60
 	certification_expiration_critical = 30
+
+	skip_certificate_verification = true
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_minimum = `

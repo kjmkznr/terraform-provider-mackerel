@@ -2,8 +2,10 @@ package mackerel
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -69,6 +71,30 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
+			"skip_certificate_verification": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"method": {
+				Type:         schema.TypeString,
+				Default:      http.MethodGet,
+				Optional:     true,
+				ValidateFunc: validateMethodWord,
+			},
+			"memo": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringLenBetween(0, 250),
+			},
+			"request_body": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"headers": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
@@ -113,6 +139,11 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("certification_expiration_warning", mon.CertificationExpirationWarning)
 			_ = d.Set("certification_expiration_critical", mon.CertificationExpirationCritical)
 			_ = d.Set("is_mute", mon.IsMute)
+			_ = d.Set("skip_certificate_verification", mon.SkipCertificateVerification)
+			_ = d.Set("method", mon.Method)
+			_ = d.Set("memo", mon.Memo)
+			_ = d.Set("request_body", mon.RequestBody)
+			_ = d.Set("headers", mon.Headers)
 			break
 		}
 	}
@@ -184,6 +215,34 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	if v, ok := d.GetOk("is_mute"); ok {
 		input.IsMute = v.(bool)
 	}
+	if v, ok := d.GetOk("skip_certificate_verification"); ok {
+		input.SkipCertificateVerification = v.(bool)
+	}
+	if v, ok := d.GetOk("method"); ok {
+		input.Method = v.(string)
+	}
+	if v, ok := d.GetOk("memo"); ok {
+		input.Memo = v.(string)
+	}
+	if v, ok := d.GetOk("request_body"); ok {
+		input.RequestBody = v.(string)
+	}
+	if v, ok := d.GetOk("headers"); ok {
+		input.Headers = readHeaders(v.(map[string]interface{}))
+	}
 
 	return input
+}
+
+func readHeaders(h map[string]interface{}) []mackerel.HeaderField {
+	headers := make([]mackerel.HeaderField, 0, len(h))
+	for k, v := range h {
+		header := mackerel.HeaderField{
+			Name:  k,
+			Value: v.(string),
+		}
+		headers = append(headers, header)
+	}
+
+	return headers
 }
