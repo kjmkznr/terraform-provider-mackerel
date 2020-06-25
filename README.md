@@ -143,6 +143,19 @@ resource "mackerel_expression_monitor" "foobar" {
 }
 ```
 
+### `mackerel_service`
+
+Configure a service.
+
+#### Example
+
+```
+resource "mackerel_service" "foobar" {
+    name = "Web"
+    memo = "This is Web service"
+}
+```
+
 
 Build
 -----
