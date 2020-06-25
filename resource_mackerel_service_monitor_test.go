@@ -146,37 +146,49 @@ func testAccCheckMackerelServiceMonitorDestroy(s *terraform.State) error {
 }
 
 const testAccCheckMackerelServiceMonitorConfig_basic = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
-	service               = "Blog"
-    duration              = 10
-    metric                = "cpu%"
-    operator              = ">"
-    warning               = 80.0
-    critical              = 90.0
-    notification_interval = 10
+  name                  = "terraform_for_mackerel_test_foobar"
+  service               = mackerel_service.blog.name
+  duration              = 10
+  metric                = "cpu%"
+  operator              = ">"
+  warning               = 80.0
+  critical              = 90.0
+  notification_interval = 10
 }`
 
 const testAccCheckMackerelServiceMonitorConfig_update = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar_upd"
-	service               = "Blog"
-    duration              = 10
-    metric                = "cpu%"
-    operator              = ">"
-    warning               = 85.5
-    critical              = 95.5
-    notification_interval = 10
+  name                  = "terraform_for_mackerel_test_foobar_upd"
+  service               = mackerel_service.blog.name
+  duration              = 10
+  metric                = "cpu%"
+  operator              = ">"
+  warning               = 85.5
+  critical              = 95.5
+  notification_interval = 10
 }`
 
 const testAccCheckMackerelServiceMonitorConfig_minimum = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
-	service               = "Blog"
-    duration              = 10
-    metric                = "cpu%"
-    operator              = ">"
-    warning               = 80.0
-    critical              = 90.0
-    notification_interval = 10
+  name                  = "terraform_for_mackerel_test_foobar"
+  service               = mackerel_service.blog.name
+  duration              = 10
+  metric                = "cpu%"
+  operator              = ">"
+  warning               = 80.0
+  critical              = 90.0
+  notification_interval = 10
 }`

@@ -26,6 +26,7 @@ func Provider() terraform.ResourceProvider {
 			"mackerel_external_monitor":   resourceMackerelExternalMonitor(),
 			"mackerel_expression_monitor": resourceMackerelExpressionMonitor(),
 			"mackerel_dashboard":          resourceMackerelDashboard(),
+			"mackerel_service":            resourceMackerelService(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

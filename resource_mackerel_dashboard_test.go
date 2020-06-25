@@ -81,8 +81,8 @@ func testAccCheckMackerelDashboardDestroy(s *terraform.State) error {
 
 const testAccCheckMackerelDashboardConfig_basic = `
 resource "mackerel_dashboard" "foobar" {
-    title         = "terraform_for_mackerel_test_foobar"
-    url_path      = "foo/bar"
+  title         = "terraform_for_mackerel_test_foobar"
+  url_path      = "foo/bar"
 	body_markdown = <<EOF
 # Head1
 ## Head2
@@ -94,8 +94,8 @@ EOF
 
 const testAccCheckMackerelDashboardConfig_update = `
 resource "mackerel_dashboard" "foobar" {
-    title         = "terraform_for_mackerel_test_foobar_upd"
-    url_path      = "bar/baz"
+  title         = "terraform_for_mackerel_test_foobar_upd"
+  url_path      = "bar/baz"
 	body_markdown = <<EOF
 # Head1
 ## Head2

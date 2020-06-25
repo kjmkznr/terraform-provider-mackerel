@@ -172,52 +172,60 @@ func testAccCheckMackerelExternalMonitorDestroy(s *terraform.State) error {
 }
 
 const testAccCheckMackerelExternalMonitorConfig_basic = `
+resource "mackerel_service" "web" {
+  name = "Web"
+}
+
 resource "mackerel_external_monitor" "foobar" {
-    name                   = "terraform_for_mackerel_test_foobar"
-	url                    = "https://terraform.io/"
-    service                = "Web"
-    notification_interval  = 10
-	response_time_duration = 5
-	response_time_warning  = 500
-	response_time_critical = 1000
-	contains_string        = "terraform"
-	max_check_attempts     = 2
+  name                   = "terraform_for_mackerel_test_foobar"
+  url                    = "https://terraform.io/"
+  service                = mackerel_service.web.name
+  notification_interval  = 10
+  response_time_duration = 5
+  response_time_warning  = 500
+  response_time_critical = 1000
+  contains_string        = "terraform"
+  max_check_attempts     = 2
 
-	certification_expiration_warning  = 30
-	certification_expiration_critical = 10
+  certification_expiration_warning  = 30
+  certification_expiration_critical = 10
 
-	skip_certificate_verification = false
+  skip_certificate_verification = false
 
-    request_body = "{\"request\": \"body\"}"
-    headers = {
-        "Content-Type" = "application/json",
-        "API-Key" = "xxxxxx",
-    }
+  request_body = "{\"request\": \"body\"}"
+  headers = {
+      "Content-Type" = "application/json",
+      "API-Key" = "xxxxxx",
+  }
 
-    memo = "XXX"
+  memo = "XXX"
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_update = `
+resource "mackerel_service" "web" {
+  name = "Web"
+}
+
 resource "mackerel_external_monitor" "foobar" {
-    name                   = "terraform_for_mackerel_test_foobar_upd"
-	url                    = "https://terraform.io/"
-    method                 = "POST"
-    service                = "Web"
-    notification_interval  = 10
-	response_time_duration = 10
-	response_time_warning  = 800
-	response_time_critical = 900
-	contains_string        = "terraform"
-	max_check_attempts     = 3
+  name                   = "terraform_for_mackerel_test_foobar_upd"
+  url                    = "https://terraform.io/"
+  method                 = "POST"
+  service                = mackerel_service.web.name
+  notification_interval  = 10
+  response_time_duration = 10
+  response_time_warning  = 800
+  response_time_critical = 900
+  contains_string        = "terraform"
+  max_check_attempts     = 3
 
-	certification_expiration_warning  = 60
-	certification_expiration_critical = 30
+  certification_expiration_warning  = 60
+  certification_expiration_critical = 30
 
-	skip_certificate_verification = true
+  skip_certificate_verification = true
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_minimum = `
 resource "mackerel_external_monitor" "foobar" {
-    name                   = "terraform_for_mackerel_test_foobar_min"
-	url                    = "https://terraform.io/"
+  name                   = "terraform_for_mackerel_test_foobar_min"
+  url                    = "https://terraform.io/"
 }`
