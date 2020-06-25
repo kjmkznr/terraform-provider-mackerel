@@ -4,6 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    default_labels:
+    labels:
       - "dependencies"
       - "dependabot"
