@@ -146,9 +146,13 @@ func testAccCheckMackerelServiceMonitorDestroy(s *terraform.State) error {
 }
 
 const testAccCheckMackerelServiceMonitorConfig_basic = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
   name                  = "terraform_for_mackerel_test_foobar"
-  service               = "Blog"
+  service               = mackerel_service.blog.name
   duration              = 10
   metric                = "cpu%"
   operator              = ">"
@@ -158,9 +162,13 @@ resource "mackerel_service_monitor" "foobar" {
 }`
 
 const testAccCheckMackerelServiceMonitorConfig_update = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
   name                  = "terraform_for_mackerel_test_foobar_upd"
-  service               = "Blog"
+  service               = mackerel_service.blog.name
   duration              = 10
   metric                = "cpu%"
   operator              = ">"
@@ -170,9 +178,13 @@ resource "mackerel_service_monitor" "foobar" {
 }`
 
 const testAccCheckMackerelServiceMonitorConfig_minimum = `
+resource "mackerel_service" "blog" {
+  name = "Blog"
+}
+
 resource "mackerel_service_monitor" "foobar" {
   name                  = "terraform_for_mackerel_test_foobar"
-  service               = "Blog"
+  service               = mackerel_service.blog.name
   duration              = 10
   metric                = "cpu%"
   operator              = ">"

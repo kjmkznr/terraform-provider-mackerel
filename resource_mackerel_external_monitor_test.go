@@ -172,10 +172,14 @@ func testAccCheckMackerelExternalMonitorDestroy(s *terraform.State) error {
 }
 
 const testAccCheckMackerelExternalMonitorConfig_basic = `
+resource "mackerel_service" "web" {
+  name = "Web"
+}
+
 resource "mackerel_external_monitor" "foobar" {
   name                   = "terraform_for_mackerel_test_foobar"
   url                    = "https://terraform.io/"
-  service                = "Web"
+  service                = mackerel_service.web.name
   notification_interval  = 10
   response_time_duration = 5
   response_time_warning  = 500
@@ -198,11 +202,15 @@ resource "mackerel_external_monitor" "foobar" {
 }`
 
 const testAccCheckMackerelExternalMonitorConfig_update = `
+resource "mackerel_service" "web" {
+  name = "Web"
+}
+
 resource "mackerel_external_monitor" "foobar" {
   name                   = "terraform_for_mackerel_test_foobar_upd"
   url                    = "https://terraform.io/"
   method                 = "POST"
-  service                = "Web"
+  service                = mackerel_service.web.name
   notification_interval  = 10
   response_time_duration = 10
   response_time_warning  = 800
