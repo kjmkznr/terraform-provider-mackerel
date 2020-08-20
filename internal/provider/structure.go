@@ -1,4 +1,4 @@
-package mackerel
+package provider
 
 func expandStringList(configured []interface{}) []string {
 	vs := make([]string, 0, len(configured))

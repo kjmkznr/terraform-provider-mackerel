@@ -1,4 +1,4 @@
-package mackerel
+package provider
 
 import (
 	"fmt"

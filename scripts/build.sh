@@ -25,7 +25,7 @@ gox \
     -osarch="${XC_EXCLUDE_OSARCH}" \
     -ldflags "${LD_FLAGS}" \
     -output "pkg/{{.OS}}_{{.Arch}}/terraform-provider-mackerel" \
-    ./builtin/bins/provider-mackerel/
+    .
 
 echo "==> Packaging..."
 for PLATFORM in $(find ./pkg -mindepth 1 -maxdepth 1 -type d); do

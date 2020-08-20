@@ -11,7 +11,7 @@ clean:
 	rm -Rf $(CURDIR)/bin/*
 
 build: clean vet
-	go build -o $(CURDIR)/bin/terraform-provider-mackerel $(CURDIR)/builtin/bins/provider-mackerel/main.go
+	go build -o $(CURDIR)/bin/terraform-provider-mackerel $(CURDIR)//main.go
 
 test: vet
 	TF_ACC= go test $(TEST) $(TESTARGS) -timeout=30s -parallel=4

@@ -1,4 +1,4 @@
-package mackerel
+package provider
 
 import (
 	"log"
@@ -7,12 +7,12 @@ import (
 	"github.com/mackerelio/mackerel-client-go"
 )
 
-func resourceMackerelExpressionMonitor() *schema.Resource {
+func resourceMackerelHostMonitor() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceMackerelExpressionMonitorCreate,
-		Read:   resourceMackerelExpressionMonitorRead,
-		Update: resourceMackerelExpressionMonitorUpdate,
-		Delete: resourceMackerelExpressionMonitorDelete,
+		Create: resourceMackerelHostMonitorCreate,
+		Read:   resourceMackerelHostMonitorRead,
+		Update: resourceMackerelHostMonitorUpdate,
+		Delete: resourceMackerelHostMonitorDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -22,7 +22,11 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"expression": {
+			"duration": {
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"metric": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -42,6 +46,16 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"scopes": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"exclude_scopes": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 			"is_mute": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -50,18 +64,27 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 	}
 }
 
-func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.MonitorExpression{
-		Type:                 "expression",
+	input := &mackerel.MonitorHostMetric{
+		Type:                 "host",
 		Name:                 d.Get("name").(string),
-		Expression:           d.Get("expression").(string),
+		Duration:             uint64(d.Get("duration").(int)),
+		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
 		Warning:              pfloat64(d.Get("warning").(float64)),
 		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
+	}
+
+	if v, ok := d.GetOk("scopes"); ok {
+		input.Scopes = expandStringList(v.([]interface{}))
+	}
+
+	if v, ok := d.GetOk("exclude_scopes"); ok {
+		input.ExcludeScopes = expandStringList(v.([]interface{}))
 	}
 
 	monitor, err := client.CreateMonitor(input)
@@ -72,10 +95,10 @@ func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] mackerel monitor %q created.", monitor.MonitorID())
 	d.SetId(monitor.MonitorID())
 
-	return resourceMackerelExpressionMonitorRead(d, meta)
+	return resourceMackerelHostMonitorRead(d, meta)
 }
 
-func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
 	log.Printf("[DEBUG] Reading mackerel monitor: %q", d.Id())
@@ -85,15 +108,18 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 	}
 
 	for _, monitor := range monitors {
-		if monitor.MonitorType() == "expression" && monitor.MonitorID() == d.Id() {
-			mon := monitor.(*mackerel.MonitorExpression)
-			_ = d.Set("id", mon.MonitorID())
-			_ = d.Set("name", mon.MonitorName())
-			_ = d.Set("expression", mon.Expression)
+		if monitor.MonitorType() == "host" && monitor.MonitorID() == d.Id() {
+			mon := monitor.(*mackerel.MonitorHostMetric)
+			_ = d.Set("id", mon.ID)
+			_ = d.Set("name", mon.Name)
+			_ = d.Set("duration", mon.Duration)
+			_ = d.Set("metric", mon.Metric)
 			_ = d.Set("operator", mon.Operator)
 			_ = d.Set("warning", mon.Warning)
 			_ = d.Set("critical", mon.Critical)
 			_ = d.Set("notification_interval", mon.NotificationInterval)
+			_ = d.Set("scopes", flattenStringList(mon.Scopes))
+			_ = d.Set("exclude_scopes", flattenStringList(mon.ExcludeScopes))
 			_ = d.Set("is_mute", mon.IsMute)
 			break
 		}
@@ -102,18 +128,27 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelHostMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
-	input := &mackerel.MonitorExpression{
-		Type:                 "expression",
+	input := &mackerel.MonitorHostMetric{
+		Type:                 "host",
 		Name:                 d.Get("name").(string),
-		Expression:           d.Get("expression").(string),
+		Duration:             uint64(d.Get("duration").(int)),
+		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
 		Warning:              pfloat64(d.Get("warning").(float64)),
 		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
+	}
+
+	if v, ok := d.GetOk("scopes"); ok {
+		input.Scopes = expandStringList(v.([]interface{}))
+	}
+
+	if v, ok := d.GetOk("exclude_scopes"); ok {
+		input.ExcludeScopes = expandStringList(v.([]interface{}))
 	}
 
 	_, err := client.UpdateMonitor(d.Id(), input)
@@ -122,10 +157,10 @@ func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interf
 	}
 
 	log.Printf("[DEBUG] mackerel monitor %q updated.", d.Id())
-	return resourceMackerelExpressionMonitorRead(d, meta)
+	return resourceMackerelHostMonitorRead(d, meta)
 }
 
-func resourceMackerelExpressionMonitorDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelHostMonitorDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
 	_, err := client.DeleteMonitor(d.Id())
