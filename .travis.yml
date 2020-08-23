@@ -7,18 +7,5 @@ go:
 before_script:
   - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $GOPATH/bin v1.25.1
 
-
 script:
   - make test vet lint
-before_deploy:
-  - ./scripts/build.sh
-
-deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: nbQjyh7mqbEMHnn5SIDXHu6EjmXvFFLAULFPeWQWCU9IaUOQE8+mcP7Zjomcn0Mli/MxJXw9UwOxdnXQi1cVKMsuHqOg9dGhP+SEIwH/0g4kop/tFEryJVotpTmBdJT+w6L+9vMzm31dD+fvyU+8tC2R/dN3zZ+d8Dasc7CUQ2+rmsJgi0pUgGOneo0ZQ3YTQR6Jo0ETBLVPyNJ5js5FllDifoQw30qdpd0blfaZiPoiV+QP7sW6FczgYAFL4V6nW891WVnI4iexaktxyns9rt8pNxRJyc0DBkAaChJvSz06OM40Jfd3iBM9O4N3f1MdQtbOhsxPtS7Df9P4ThAQftbojcirQaX+kFWUIscs8jW2y+AeZBdRFIzxDL7OEitKRbXJGNERP/8M2WxUHkqfgKJjheUeIOPs+jjIWPw/GlYe9cfBY+/NRgxT6CUO5FjEABxCnvP/W8SUIpfIx11W2puyvbgPa82rPYXjRYBS0AEpMACa7zVQRZmRHv0PkJTlUQWpCUKH08esPXUvh3JBEVnUYg1tRI3wux1K61/Qq44+LlIKxMZa549zE32F8OpyG3Y3YLJ1u/X45hgHmmq/raBV9D1OJt8tQ4IWeT0RMWUfUMNEt2TF8OnOj48LL1mhZhpzEp6ba6X2sjfgy1p82pgAHTgTyp2VjG5gP5E8cNs=
-  file_glob: true
-  file: 'pkg/*.zip'
-  on:
-    tags: true
