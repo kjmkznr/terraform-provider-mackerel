@@ -24,7 +24,7 @@ func TestAccMackerelDashboard_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "title", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/bar/baz", rName)),
+						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/foo/bar", rName)),
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n* List1\n* List2\n"),
 				),
@@ -47,7 +47,7 @@ func TestAccMackerelDashboard_Update(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "title", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/bar/baz", rName)),
+						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/foo/bar", rName)),
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n* List1\n* List2\n"),
 				),
