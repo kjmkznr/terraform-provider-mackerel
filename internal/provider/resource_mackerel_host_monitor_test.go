@@ -4,22 +4,25 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelHostMonitor_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelHostMonitorConfig_basic,
+				Config: testAccCheckMackerelHostMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_host_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_host_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -43,16 +46,18 @@ func TestAccMackerelHostMonitor_Basic(t *testing.T) {
 }
 
 func TestAccMackerelHostMonitor_Update(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelHostMonitorConfig_basic,
+				Config: testAccCheckMackerelHostMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_host_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_host_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -72,10 +77,10 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckMackerelHostMonitorConfig_update,
+				Config: testAccCheckMackerelHostMonitorConfigUpdate(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_host_monitor.foobar", "name", "terraform_for_mackerel_test_foobar_upd"),
+						"mackerel_host_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -99,16 +104,18 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 }
 
 func TestAccMackerelHostMonitor_Minimum(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelHostMonitorConfig_minimum,
+				Config: testAccCheckMackerelHostMonitorConfigMinimum(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_host_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_host_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -149,35 +156,41 @@ func testAccCheckMackerelHostMonitorDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelHostMonitorConfig_basic = `
+func testAccCheckMackerelHostMonitorConfigBasic(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_host_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
+    name                  = "%s"
     duration              = 10
-    metric                = "cpu%"
+    metric                = "cpu%%"
     operator              = ">"
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
-}`
+}`, rName)
+}
 
-const testAccCheckMackerelHostMonitorConfig_update = `
+func testAccCheckMackerelHostMonitorConfigUpdate(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_host_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar_upd"
+    name                  = "%s"
     duration              = 10
-    metric                = "cpu%"
+    metric                = "cpu%%"
     operator              = ">"
     warning               = 85.5
     critical              = 95.5
     notification_interval = 10
-}`
+}`, rName)
+}
 
-const testAccCheckMackerelHostMonitorConfig_minimum = `
+func testAccCheckMackerelHostMonitorConfigMinimum(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_host_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
+    name                  = "%s"
     duration              = 10
-    metric                = "cpu%"
+    metric                = "cpu%%"
     operator              = ">"
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
-}`
+}`, rName)
+}

@@ -4,22 +4,25 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelService_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestService-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelServiceConfig_basic,
+				Config: testAccMackerelServiceConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_service.foobar", "name", "foobar"),
+						"mackerel_service.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_service.foobar", "memo", "xxxxx"),
 				),
@@ -50,8 +53,11 @@ func testAccCheckMackerelServiceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelServiceConfig_basic = `
+func testAccMackerelServiceConfigBasic(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_service" "foobar" {
-    name = "foobar"
+    name = "%s"
     memo = "xxxxx"
-}`
+}
+`, rName)
+}

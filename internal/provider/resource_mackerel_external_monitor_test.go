@@ -4,26 +4,29 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExternalMonitorConfig_basic,
+				Config: testAccCheckMackerelExternalMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_external_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "url", "https://terraform.io/"),
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "service", "Web"),
+						"mackerel_external_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
@@ -57,20 +60,22 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 }
 
 func TestAccMackerelExternalMonitor_Update(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExternalMonitorConfig_basic,
+				Config: testAccCheckMackerelExternalMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_external_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "url", "https://terraform.io/"),
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "service", "Web"),
+						"mackerel_external_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
@@ -94,14 +99,14 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckMackerelExternalMonitorConfig_update,
+				Config: testAccCheckMackerelExternalMonitorConfigUpdate(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "name", "terraform_for_mackerel_test_foobar_upd"),
+						"mackerel_external_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "url", "https://terraform.io/"),
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "service", "Web"),
+						"mackerel_external_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
@@ -131,16 +136,18 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 }
 
 func TestAccMackerelExternalMonitor_Minimum(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExternalMonitorConfig_minimum,
+				Config: testAccCheckMackerelExternalMonitorConfigMinimum(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_external_monitor.foobar", "name", "terraform_for_mackerel_test_foobar_min"),
+						"mackerel_external_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_external_monitor.foobar", "url", "https://terraform.io/"),
 				),
@@ -171,13 +178,14 @@ func testAccCheckMackerelExternalMonitorDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelExternalMonitorConfig_basic = `
+func testAccCheckMackerelExternalMonitorConfigBasic(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_service" "web" {
-  name = "Web"
+  name = "%s"
 }
 
 resource "mackerel_external_monitor" "foobar" {
-  name                   = "terraform_for_mackerel_test_foobar"
+  name                   = "%s"
   url                    = "https://terraform.io/"
   service                = mackerel_service.web.name
   notification_interval  = 10
@@ -199,15 +207,17 @@ resource "mackerel_external_monitor" "foobar" {
   }
 
   memo = "XXX"
-}`
+}`, rName, rName)
+}
 
-const testAccCheckMackerelExternalMonitorConfig_update = `
+func testAccCheckMackerelExternalMonitorConfigUpdate(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_service" "web" {
-  name = "Web"
+  name = "%s"
 }
 
 resource "mackerel_external_monitor" "foobar" {
-  name                   = "terraform_for_mackerel_test_foobar_upd"
+  name                   = "%s"
   url                    = "https://terraform.io/"
   method                 = "POST"
   service                = mackerel_service.web.name
@@ -222,10 +232,13 @@ resource "mackerel_external_monitor" "foobar" {
   certification_expiration_critical = 30
 
   skip_certificate_verification = true
-}`
+}`, rName, rName)
+}
 
-const testAccCheckMackerelExternalMonitorConfig_minimum = `
+func testAccCheckMackerelExternalMonitorConfigMinimum(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_external_monitor" "foobar" {
-  name                   = "terraform_for_mackerel_test_foobar_min"
+  name                   = "%s"
   url                    = "https://terraform.io/"
-}`
+}`, rName)
+}

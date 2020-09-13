@@ -4,22 +4,25 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelExpressionMonitor_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExpressionMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExpressionMonitorConfig_basic,
+				Config: testAccCheckMackerelExpressionMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_expression_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_expression_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_expression_monitor.foobar", "expression", `avg(roleSlots("server:role","loadavg5"))`),
 					resource.TestCheckResourceAttr(
@@ -37,16 +40,18 @@ func TestAccMackerelExpressionMonitor_Basic(t *testing.T) {
 }
 
 func TestAccMackerelExpressionMonitor_Update(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExpressionMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExpressionMonitorConfig_basic,
+				Config: testAccCheckMackerelExpressionMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_expression_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_expression_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_expression_monitor.foobar", "expression", `avg(roleSlots("server:role","loadavg5"))`),
 					resource.TestCheckResourceAttr(
@@ -60,10 +65,10 @@ func TestAccMackerelExpressionMonitor_Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckMackerelExpressionMonitorConfig_update,
+				Config: testAccCheckMackerelExpressionMonitorConfigUpdate(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_expression_monitor.foobar", "name", "terraform_for_mackerel_test_foobar_upd"),
+						"mackerel_expression_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_expression_monitor.foobar", "expression", `avg(roleSlots("server:role","loadavg5"))`),
 					resource.TestCheckResourceAttr(
@@ -81,16 +86,18 @@ func TestAccMackerelExpressionMonitor_Update(t *testing.T) {
 }
 
 func TestAccMackerelExpressionMonitor_Minimum(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestExpressionMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelExpressionMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelExpressionMonitorConfig_minimum,
+				Config: testAccCheckMackerelExpressionMonitorConfigMinimum(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_expression_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_expression_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_expression_monitor.foobar", "expression", `avg(roleSlots("server:role","loadavg5"))`),
 					resource.TestCheckResourceAttr(
@@ -129,32 +136,38 @@ func testAccCheckMackerelExpressionMonitorDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelExpressionMonitorConfig_basic = `
+func testAccCheckMackerelExpressionMonitorConfigBasic(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_expression_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
+    name                  = "%s"
     expression            = "avg(roleSlots(\"server:role\",\"loadavg5\"))"
     operator              = ">"
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
-}`
+}`, rName)
+}
 
-const testAccCheckMackerelExpressionMonitorConfig_update = `
+func testAccCheckMackerelExpressionMonitorConfigUpdate(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_expression_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar_upd"
+    name                  = "%s"
     expression            = "avg(roleSlots(\"server:role\",\"loadavg5\"))"
     operator              = ">"
     warning               = 85.5
     critical              = 95.5
     notification_interval = 10
-}`
+}`, rName)
+}
 
-const testAccCheckMackerelExpressionMonitorConfig_minimum = `
+func testAccCheckMackerelExpressionMonitorConfigMinimum(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_expression_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar"
+    name                  = "%s"
     expression            = "avg(roleSlots(\"server:role\",\"loadavg5\"))"
     operator              = ">"
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
-}`
+}`, rName)
+}
