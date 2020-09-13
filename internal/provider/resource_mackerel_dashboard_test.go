@@ -4,24 +4,27 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelDashboard_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestDashboard-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelDashboardConfig_basic,
+				Config: testAccCheckMackerelDashboardConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "title", "terraform_for_mackerel_test_foobar"),
+						"mackerel_dashboard.foobar", "title", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "url_path", "foo/bar"),
+						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/foo/bar", rName)),
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n* List1\n* List2\n"),
 				),
@@ -31,29 +34,31 @@ func TestAccMackerelDashboard_Basic(t *testing.T) {
 }
 
 func TestAccMackerelDashboard_Update(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestDashboard-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelDashboardConfig_basic,
+				Config: testAccCheckMackerelDashboardConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "title", "terraform_for_mackerel_test_foobar"),
+						"mackerel_dashboard.foobar", "title", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "url_path", "foo/bar"),
+						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/foo/bar", rName)),
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n* List1\n* List2\n"),
 				),
 			},
 			{
-				Config: testAccCheckMackerelDashboardConfig_update,
+				Config: testAccCheckMackerelDashboardConfigUpdate(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "title", "terraform_for_mackerel_test_foobar_upd"),
+						"mackerel_dashboard.foobar", "title", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_dashboard.foobar", "url_path", "bar/baz"),
+						"mackerel_dashboard.foobar", "url_path", fmt.Sprintf("%s/bar/baz", rName)),
 					resource.TestCheckResourceAttr(
 						"mackerel_dashboard.foobar", "body_markdown", "# Head1\n## Head2\n\n[Link](https://terraform.io/)\n"),
 				),
@@ -79,10 +84,11 @@ func testAccCheckMackerelDashboardDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelDashboardConfig_basic = `
+func testAccCheckMackerelDashboardConfigBasic(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_dashboard" "foobar" {
-  title         = "terraform_for_mackerel_test_foobar"
-  url_path      = "foo/bar"
+  title         = "%s"
+  url_path      = "%s/foo/bar"
 	body_markdown = <<EOF
 # Head1
 ## Head2
@@ -90,16 +96,19 @@ resource "mackerel_dashboard" "foobar" {
 * List1
 * List2
 EOF
-}`
+}`, rName, rName)
+}
 
-const testAccCheckMackerelDashboardConfig_update = `
+func testAccCheckMackerelDashboardConfigUpdate(rName string) string {
+	return fmt.Sprintf(`
 resource "mackerel_dashboard" "foobar" {
-  title         = "terraform_for_mackerel_test_foobar_upd"
-  url_path      = "bar/baz"
+  title         = "%s"
+  url_path      = "%s/bar/baz"
 	body_markdown = <<EOF
 # Head1
 ## Head2
 
 [Link](https://terraform.io/)
 EOF
-}`
+}`, rName, rName)
+}

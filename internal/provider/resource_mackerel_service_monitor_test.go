@@ -4,24 +4,27 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelServiceMonitorConfig_basic,
+				Config: testAccMackerelServiceMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_service_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "service", "Blog"),
+						"mackerel_service_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -41,18 +44,20 @@ func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
 }
 
 func TestAccMackerelServiceMonitor_Update(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelServiceMonitorConfig_basic,
+				Config: testAccMackerelServiceMonitorConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_service_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "service", "Blog"),
+						"mackerel_service_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -68,12 +73,12 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckMackerelServiceMonitorConfig_update,
+				Config: testAccMackerelServiceMonitorConfigUpdate(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "name", "terraform_for_mackerel_test_foobar_upd"),
+						"mackerel_service_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "service", "Blog"),
+						"mackerel_service_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -93,18 +98,20 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 }
 
 func TestAccMackerelServiceMonitor_Minimum(t *testing.T) {
+	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckMackerelServiceMonitorConfig_minimum,
+				Config: testAccMackerelServiceMonitorConfigMinimum(rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "name", "terraform_for_mackerel_test_foobar"),
+						"mackerel_service_monitor.foobar", "name", rName),
 					resource.TestCheckResourceAttr(
-						"mackerel_service_monitor.foobar", "service", "Blog"),
+						"mackerel_service_monitor.foobar", "service", rName),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "duration", "10"),
 					resource.TestCheckResourceAttr(
@@ -145,50 +152,59 @@ func testAccCheckMackerelServiceMonitorDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccCheckMackerelServiceMonitorConfig_basic = `
-resource "mackerel_service" "blog" {
-  name = "Blog"
+func testAccMackerelServiceMonitorConfigBasic(rName string) string {
+	return fmt.Sprintf(`
+resource "mackerel_service" "foobar" {
+    name = "%s"
 }
 
 resource "mackerel_service_monitor" "foobar" {
-  name                  = "terraform_for_mackerel_test_foobar"
-  service               = mackerel_service.blog.name
+  name                  = "%s"
+  service               = mackerel_service.foobar.name
   duration              = 10
-  metric                = "cpu%"
+  metric                = "cpu%%"
   operator              = ">"
   warning               = 80.0
   critical              = 90.0
   notification_interval = 10
-}`
+}
+`, rName, rName)
+}
 
-const testAccCheckMackerelServiceMonitorConfig_update = `
-resource "mackerel_service" "blog" {
-  name = "Blog"
+func testAccMackerelServiceMonitorConfigUpdate(rName string) string {
+	return fmt.Sprintf(`
+resource "mackerel_service" "foobar" {
+    name = "%s"
 }
 
 resource "mackerel_service_monitor" "foobar" {
-  name                  = "terraform_for_mackerel_test_foobar_upd"
-  service               = mackerel_service.blog.name
+  name                  = "%s"
+  service               = mackerel_service.foobar.name
   duration              = 10
-  metric                = "cpu%"
+  metric                = "cpu%%"
   operator              = ">"
   warning               = 85.5
   critical              = 95.5
   notification_interval = 10
-}`
+}
+`, rName, rName)
+}
 
-const testAccCheckMackerelServiceMonitorConfig_minimum = `
-resource "mackerel_service" "blog" {
-  name = "Blog"
+func testAccMackerelServiceMonitorConfigMinimum(rName string) string {
+	return fmt.Sprintf(`
+resource "mackerel_service" "foobar" {
+    name = "%s"
 }
 
 resource "mackerel_service_monitor" "foobar" {
-  name                  = "terraform_for_mackerel_test_foobar"
-  service               = mackerel_service.blog.name
+  name                  = "%s"
+  service               = mackerel_service.foobar.name
   duration              = 10
-  metric                = "cpu%"
+  metric                = "cpu%%"
   operator              = ">"
   warning               = 80.0
   critical              = 90.0
   notification_interval = 10
-}`
+}
+`, rName, rName)
+}
