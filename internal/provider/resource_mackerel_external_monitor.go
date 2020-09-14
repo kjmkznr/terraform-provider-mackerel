@@ -54,10 +54,10 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Optional: true,
 			},
 			"max_check_attempts": {
-				Type:     schema.TypeFloat,
-				Optional: true,
-				Default:  1,
-				//ValidateFunc: validateDurationTime 1 - 10
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: validation.IntBetween(1, 10),
 			},
 			"certification_expiration_warning": {
 				Type:     schema.TypeInt,
@@ -204,7 +204,7 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 		input.ContainsString = v.(string)
 	}
 	if v, ok := d.GetOk("max_check_attempts"); ok {
-		input.MaxCheckAttempts = uint64(v.(float64))
+		input.MaxCheckAttempts = uint64(v.(int))
 	}
 	if v, ok := d.GetOk("certification_expiration_warning"); ok {
 		input.CertificationExpirationWarning = puint64(uint64(v.(int)))
