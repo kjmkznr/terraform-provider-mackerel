@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -46,6 +48,12 @@ func resourceMackerelHostMonitor() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"max_check_attempts": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validation.IntBetween(1, 10),
+				Default:      1,
+			},
 			"scopes": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -76,6 +84,7 @@ func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{})
 		Warning:              pfloat64(d.Get("warning").(float64)),
 		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
+		MaxCheckAttempts:     uint64(d.Get("max_check_attempts").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
 
@@ -118,6 +127,7 @@ func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) e
 			_ = d.Set("warning", mon.Warning)
 			_ = d.Set("critical", mon.Critical)
 			_ = d.Set("notification_interval", mon.NotificationInterval)
+			_ = d.Set("max_check_attempts", mon.MaxCheckAttempts)
 			_ = d.Set("scopes", flattenStringList(mon.Scopes))
 			_ = d.Set("exclude_scopes", flattenStringList(mon.ExcludeScopes))
 			_ = d.Set("is_mute", mon.IsMute)
@@ -140,6 +150,7 @@ func resourceMackerelHostMonitorUpdate(d *schema.ResourceData, meta interface{})
 		Warning:              pfloat64(d.Get("warning").(float64)),
 		Critical:             pfloat64(d.Get("critical").(float64)),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
+		MaxCheckAttempts:     uint64(d.Get("max_check_attempts").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
 

@@ -37,6 +37,8 @@ func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
 						"mackerel_service_monitor.foobar", "critical", "90"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "max_check_attempts", "3"),
 				),
 			},
 		},
@@ -70,6 +72,8 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 						"mackerel_service_monitor.foobar", "critical", "90"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "max_check_attempts", "3"),
 				),
 			},
 			{
@@ -91,6 +95,8 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 						"mackerel_service_monitor.foobar", "critical", "95.5"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "max_check_attempts", "3"),
 				),
 			},
 		},
@@ -167,6 +173,7 @@ resource "mackerel_service_monitor" "foobar" {
   warning               = 80.0
   critical              = 90.0
   notification_interval = 10
+  max_check_attempts    = 3
 }
 `, rName, rName)
 }
@@ -186,6 +193,7 @@ resource "mackerel_service_monitor" "foobar" {
   warning               = 85.5
   critical              = 95.5
   notification_interval = 10
+  max_check_attempts    = 3
 }
 `, rName, rName)
 }
@@ -205,6 +213,7 @@ resource "mackerel_service_monitor" "foobar" {
   warning               = 80.0
   critical              = 90.0
   notification_interval = 10
+  max_check_attempts    = 3
 }
 `, rName, rName)
 }
