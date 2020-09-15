@@ -12,4 +12,5 @@ before_script:
   - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $GOPATH/bin v1.25.1
 
 script:
-  - make test vet lint testacc
+  - make test vet lint
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then make testacc; fi'
