@@ -36,6 +36,8 @@ func TestAccMackerelHostMonitor_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
+						"mackerel_host_monitor.foobar", "max_check_attempts", "3"),
+					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "scopes.#", "0"),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "exclude_scopes.#", "0"),
@@ -71,6 +73,8 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
+						"mackerel_host_monitor.foobar", "max_check_attempts", "3"),
+					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "scopes.#", "0"),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "exclude_scopes.#", "0"),
@@ -93,6 +97,8 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 						"mackerel_host_monitor.foobar", "critical", "95.5"),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "notification_interval", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_host_monitor.foobar", "max_check_attempts", "3"),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "scopes.#", "0"),
 					resource.TestCheckResourceAttr(
@@ -128,6 +134,8 @@ func TestAccMackerelHostMonitor_Minimum(t *testing.T) {
 						"mackerel_host_monitor.foobar", "critical", "90"),
 					resource.TestCheckResourceAttr(
 						"mackerel_host_monitor.foobar", "notification_interval", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_host_monitor.foobar", "max_check_attempts", "3"),
 				),
 			},
 		},
@@ -166,6 +174,7 @@ resource "mackerel_host_monitor" "foobar" {
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
+    max_check_attempts    = 3
 }`, rName)
 }
 
@@ -179,6 +188,7 @@ resource "mackerel_host_monitor" "foobar" {
     warning               = 85.5
     critical              = 95.5
     notification_interval = 10
+    max_check_attempts    = 3
 }`, rName)
 }
 
@@ -192,5 +202,6 @@ resource "mackerel_host_monitor" "foobar" {
     warning               = 80.0
     critical              = 90.0
     notification_interval = 10
+    max_check_attempts    = 3
 }`, rName)
 }
