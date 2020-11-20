@@ -47,6 +47,14 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 				Type:     schema.TypeFloat,
 				Required: true,
 			},
+			"missing_duration_warning": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"missing_duration_critical": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
 			"notification_interval": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -69,17 +77,19 @@ func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface
 	client := meta.(*mackerel.Client)
 
 	input := &mackerel.MonitorServiceMetric{
-		Type:                 "service",
-		Name:                 d.Get("name").(string),
-		Service:              d.Get("service").(string),
-		Duration:             uint64(d.Get("duration").(int)),
-		Metric:               d.Get("metric").(string),
-		Operator:             d.Get("operator").(string),
-		Warning:              pfloat64(d.Get("warning").(float64)),
-		Critical:             pfloat64(d.Get("critical").(float64)),
-		NotificationInterval: uint64(d.Get("notification_interval").(int)),
-		MaxCheckAttempts:     uint64(d.Get("max_check_attempts").(int)),
-		IsMute:               d.Get("is_mute").(bool),
+		Type:                    "service",
+		Name:                    d.Get("name").(string),
+		Service:                 d.Get("service").(string),
+		Duration:                uint64(d.Get("duration").(int)),
+		Metric:                  d.Get("metric").(string),
+		Operator:                d.Get("operator").(string),
+		Warning:                 pfloat64(d.Get("warning").(float64)),
+		Critical:                pfloat64(d.Get("critical").(float64)),
+		MissingDurationWarning:  uint64(d.Get("missing_duration_warning").(int)),
+		MissingDurationCritical: uint64(d.Get("missing_duration_critical").(int)),
+		NotificationInterval:    uint64(d.Get("notification_interval").(int)),
+		MaxCheckAttempts:        uint64(d.Get("max_check_attempts").(int)),
+		IsMute:                  d.Get("is_mute").(bool),
 	}
 
 	monitor, err := client.CreateMonitor(input)
@@ -113,6 +123,8 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 			_ = d.Set("operator", mon.Operator)
 			_ = d.Set("warning", mon.Warning)
 			_ = d.Set("critical", mon.Critical)
+			_ = d.Set("missing_duration_warning", mon.MissingDurationWarning)
+			_ = d.Set("missing_duration_critical", mon.MissingDurationCritical)
 			_ = d.Set("notification_interval", mon.NotificationInterval)
 			_ = d.Set("max_check_attempts", mon.MaxCheckAttempts)
 			_ = d.Set("is_mute", mon.IsMute)
@@ -127,17 +139,19 @@ func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface
 	client := meta.(*mackerel.Client)
 
 	input := &mackerel.MonitorServiceMetric{
-		Type:                 "service",
-		Name:                 d.Get("name").(string),
-		Service:              d.Get("service").(string),
-		Duration:             uint64(d.Get("duration").(int)),
-		Metric:               d.Get("metric").(string),
-		Operator:             d.Get("operator").(string),
-		Warning:              pfloat64(d.Get("warning").(float64)),
-		Critical:             pfloat64(d.Get("critical").(float64)),
-		NotificationInterval: uint64(d.Get("notification_interval").(int)),
-		MaxCheckAttempts:     uint64(d.Get("max_check_attempts").(int)),
-		IsMute:               d.Get("is_mute").(bool),
+		Type:                    "service",
+		Name:                    d.Get("name").(string),
+		Service:                 d.Get("service").(string),
+		Duration:                uint64(d.Get("duration").(int)),
+		Metric:                  d.Get("metric").(string),
+		Operator:                d.Get("operator").(string),
+		Warning:                 pfloat64(d.Get("warning").(float64)),
+		Critical:                pfloat64(d.Get("critical").(float64)),
+		MissingDurationWarning:  uint64(d.Get("missing_duration_warning").(int)),
+		MissingDurationCritical: uint64(d.Get("missing_duration_critical").(int)),
+		NotificationInterval:    uint64(d.Get("notification_interval").(int)),
+		MaxCheckAttempts:        uint64(d.Get("max_check_attempts").(int)),
+		IsMute:                  d.Get("is_mute").(bool),
 	}
 
 	_, err := client.UpdateMonitor(d.Id(), input)
