@@ -147,17 +147,16 @@ func resourceMackerelChannelDelete(d *schema.ResourceData, meta interface{}) err
 }
 
 func buildChannelParameter(d *schema.ResourceData) (*mackerel.Channel, error) {
-	var input *mackerel.Channel
-	var err error
-	switch channelType := d.Get("type").(string); channelType {
+	switch d.Get("type").(string) {
 	case "email":
-		input, err = buildEmailParameter(d)
+		return buildEmailParameter(d)
 	case "slack":
-		input, err = buildSlackParameter(d)
+		return buildSlackParameter(d)
 	case "webhook":
-		input, err = buildWebhookParameter(d)
+		return buildWebhookParameter(d)
+	default:
+		return nil, fmt.Errorf("%v is not valid input for type", d.Get("type"))
 	}
-	return input, err
 }
 
 // build parameter for email
@@ -206,6 +205,7 @@ func buildSlackParameter(d *schema.ResourceData) (*mackerel.Channel, error) {
 	}
 
 	if v, ok := d.GetOk("mentions"); ok {
+		// Convert from schema.TypeMap to mackerel.Mentions
 		mentionJSON, err := json.Marshal(v)
 		if err != nil {
 			return nil, err
