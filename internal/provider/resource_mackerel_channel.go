@@ -6,6 +6,8 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -13,7 +15,6 @@ func resourceMackerelChannel() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceMackerelChannelCreate,
 		Read:   resourceMackerelChannelRead,
-		Update: resourceMackerelChannelUpdate,
 		Delete: resourceMackerelChannelDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -23,6 +24,7 @@ func resourceMackerelChannel() *schema.Resource {
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"email",
 					"slack",
@@ -32,36 +34,43 @@ func resourceMackerelChannel() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"emails": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			// Field name may only contain lowercase alphanumeric characters & underscores.
 			"user_ids": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"events": {
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"url": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
 				ConflictsWith: []string{"emails", "user_ids"},
 			},
 			"mentions": {
 				Type:     schema.TypeMap,
 				Optional: true,
+				ForceNew: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"enabled_graph_image": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				ForceNew: true,
 			},
 		},
 	}
@@ -110,32 +119,6 @@ func resourceMackerelChannelRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	return nil
-}
-
-// DeleteChannel() -> CreateChannel()
-// Bacause, Mackerel API does not have UpdateChannel()
-func resourceMackerelChannelUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*mackerel.Client)
-
-	_, err := client.DeleteChannel(d.Id())
-	if err != nil {
-		return err
-	}
-
-	input, err := buildChannelParameter(d)
-	if err != nil {
-		return err
-	}
-
-	channel, err := client.CreateChannel(input)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] mackerel channel %q updated.", channel.ID)
-	d.SetId(channel.ID)
-
-	return resourceMackerelChannelRead(d, meta)
 }
 
 func resourceMackerelChannelDelete(d *schema.ResourceData, meta interface{}) error {

@@ -46,7 +46,7 @@ func TestAccMackerelChannelEmail_Invalid(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccMackerelChannelEmailConfigInvalid(rName),
-				ExpectError: regexp.MustCompile("API request failed: invalid userIds"),
+				ExpectError: regexp.MustCompile("API request failed:"),
 			},
 		},
 	})
