@@ -95,7 +95,7 @@ func resourceMackerelChannelRead(d *schema.ResourceData, meta interface{}) error
 			_ = d.Set("name", channel.Name)
 			_ = d.Set("type", channel.Type)
 			_ = d.Set("url", channel.URL)
-			_ = d.Set("enabledGraphImage", channel.EnabledGraphImage)
+			_ = d.Set("enabled_graph_image", channel.EnabledGraphImage)
 			_ = d.Set("user_ids", channel.UserIDs)
 			_ = d.Set("mentions", channel.Mentions)
 			_ = d.Set("events", channel.Events)
