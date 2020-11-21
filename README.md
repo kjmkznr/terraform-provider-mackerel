@@ -81,14 +81,16 @@ Configure a service monitor.
 
 ```
 resource "mackerel_service_monitor" "foobar" {
-    name                  = "terraform_for_mackerel_test_foobar_upd"
-    service               = "Blog"
-    duration              = 10
-    metric                = "cpu%"
-    operator              = ">"
-    warning               = 85.5
-    critical              = 95.5
-    notification_interval = 10
+    name                      = "terraform_for_mackerel_test_foobar_upd"
+    service                   = "Blog"
+    duration                  = 10
+    metric                    = "cpu%"
+    operator                  = ">"
+    warning                   = 85.5
+    critical                  = 95.5
+    missing_duration_warning  = 10
+    missing_duration_critical = 100
+    notification_interval     = 10
 }
 ```
 

@@ -36,6 +36,10 @@ func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "critical", "90"),
 					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_warning", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_critical", "30"),
+					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "max_check_attempts", "3"),
@@ -71,6 +75,10 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "critical", "90"),
 					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_warning", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_critical", "30"),
+					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "max_check_attempts", "3"),
@@ -93,6 +101,10 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 						"mackerel_service_monitor.foobar", "warning", "85.5"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "critical", "95.5"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_warning", "10"),
+					resource.TestCheckResourceAttr(
+						"mackerel_service_monitor.foobar", "missing_duration_critical", "100"),
 					resource.TestCheckResourceAttr(
 						"mackerel_service_monitor.foobar", "notification_interval", "10"),
 					resource.TestCheckResourceAttr(
@@ -172,6 +184,8 @@ resource "mackerel_service_monitor" "foobar" {
   operator              = ">"
   warning               = 80.0
   critical              = 90.0
+  missing_duration_warning = 10
+  missing_duration_critical = 30
   notification_interval = 10
   max_check_attempts    = 3
 }
@@ -192,6 +206,8 @@ resource "mackerel_service_monitor" "foobar" {
   operator              = ">"
   warning               = 85.5
   critical              = 95.5
+  missing_duration_warning = 10
+  missing_duration_critical = 100
   notification_interval = 10
   max_check_attempts    = 3
 }
