@@ -158,6 +158,26 @@ resource "mackerel_service" "foobar" {
 }
 ```
 
+### `mackerel_channel`
+
+Configure a channel.
+
+#### Example
+
+```
+resource "mackerel_channel" "foobar" {
+  name    = "test_slack"
+  type    = "slack"
+  events  = ["alert"]
+  url = "https://hooks.slack.com/services/"
+  mentions = {
+    "ok": "status_ok",
+    "critical": "critical_alert",
+  }
+  enabled_graph_image = true
+}
+```
+
 
 Build
 -----

@@ -29,3 +29,21 @@ func validateMethodWord(v interface{}, k string) (warns []string, errors []error
 	}
 	return
 }
+
+func validateChannelEvent(events []string, validEvents []string) error {
+	for _, e := range events {
+		if !isStringInSlice(e, validEvents) {
+			return fmt.Errorf("%s is not valid event", e)
+		}
+	}
+	return nil
+}
+
+func isStringInSlice(target string, strings []string) bool {
+	for _, s := range strings {
+		if target == s {
+			return true
+		}
+	}
+	return false
+}
