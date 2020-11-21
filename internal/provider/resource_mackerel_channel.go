@@ -47,6 +47,7 @@ func resourceMackerelChannel() *schema.Resource {
 			"url": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ConflictsWith: []string{"emails", "user_ids"},
 			},
 			"mentions": {
 				Type:     schema.TypeMap,
