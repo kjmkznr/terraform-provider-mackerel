@@ -95,7 +95,7 @@ func TestAccMackerelChannelWebhook_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "type", "webhook"),
 					resource.TestCheckResourceAttrSet(resourceName, "events.0"),
 					resource.TestCheckResourceAttrSet(resourceName, "events.1"),
-					resource.TestCheckResourceAttr(resourceName, "url", "https://hogehoge.com"),
+					resource.TestCheckResourceAttr(resourceName, "url", "https://example.com"),
 					resource.TestCheckResourceAttr(resourceName, "enabled_graph_image", "true"),
 				),
 			},
@@ -157,7 +157,7 @@ resource "mackerel_channel" "email" {
   events  = ["alert"]
   user_ids = ["%s"]
 }
-`, rName, os.Getenv("USER_ID"))
+`, rName, os.Getenv("MACKEREL_USER_ID"))
 }
 
 func testAccMackerelChannelEmailConfigInvalid(rName string) string {
@@ -167,7 +167,7 @@ resource "mackerel_channel" "email" {
   type    = "email"
   emails  = ["foo@exapmle.com","bar@exapmle.com"]
   events  = ["alert"]
-  user_ids = ["hoge"]
+  user_ids = ["invalid_user_id"]
 }
 `, rName)
 }
@@ -194,7 +194,7 @@ resource "mackerel_channel" "webhook" {
   name    = "%s"
   type    = "webhook"
   events  = ["alert", "monitor"]
-  url = "https://hogehoge.com"
+  url = "https://example.com"
   enabled_graph_image = true
 }
 `, rName)
