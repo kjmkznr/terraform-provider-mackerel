@@ -23,6 +23,11 @@ func resourceMackerelChannel() *schema.Resource {
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"email",
+					"slack",
+					"webhook",
+				}, false),
 			},
 			"name": {
 				Type:     schema.TypeString,
