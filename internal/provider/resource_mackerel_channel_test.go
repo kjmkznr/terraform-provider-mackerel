@@ -24,6 +24,7 @@ func TestAccMackerelChannelEmail_Basic(t *testing.T) {
 			{
 				Config: testAccMackerelChannelEmailConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMackerelChannelExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "type", "email"),
 					resource.TestCheckResourceAttrSet(resourceName, "emails.0"),
@@ -63,6 +64,7 @@ func TestAccMackerelChannelSlack_Basic(t *testing.T) {
 			{
 				Config: testAccMackerelChannelSlackConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMackerelChannelExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "type", "slack"),
 					resource.TestCheckResourceAttrSet(resourceName, "events.0"),
@@ -88,6 +90,7 @@ func TestAccMackerelChannelWebhook_Basic(t *testing.T) {
 			{
 				Config: testAccMackerelChannelWebhookConfigBasic(rName),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMackerelChannelExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "name", rName),
 					resource.TestCheckResourceAttr(resourceName, "type", "webhook"),
 					resource.TestCheckResourceAttrSet(resourceName, "events.0"),
