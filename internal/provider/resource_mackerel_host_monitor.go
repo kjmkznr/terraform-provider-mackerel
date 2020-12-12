@@ -49,10 +49,10 @@ func resourceMackerelHostMonitor() *schema.Resource {
 				Optional: true,
 			},
 			"max_check_attempts": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validation.IntBetween(1, 10),
-				Default:      1,
+				Type:             schema.TypeInt,
+				Optional:         true,
+				ValidateDiagFunc: validateDiagFunc(validation.IntBetween(1, 10)),
+				Default:          1,
 			},
 			"scopes": {
 				Type:     schema.TypeList,

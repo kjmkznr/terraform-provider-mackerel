@@ -1,8 +1,10 @@
 package provider
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 )
 
 func Test_validateMethodWord(t *testing.T) {
@@ -45,11 +47,21 @@ func Test_validateMethodWord(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotWarns, gotErrors := validateMethodWord(tt.arg, "method")
-			if !reflect.DeepEqual(len(gotWarns), tt.wantWarnCount) {
+			diagnostics := validateMethodWordDiag()(tt.arg, (cty.Path)(nil).Index(cty.StringVal("method")))
+			gotWarns := 0
+			gotErrors := 0
+			for _, d := range diagnostics {
+				if d.Severity == diag.Error {
+					gotErrors++
+				}
+				if d.Severity == diag.Warning {
+					gotWarns++
+				}
+			}
+			if gotWarns != tt.wantWarnCount {
 				t.Errorf("validateMethodWord() gotWarns = %v, want %v", gotWarns, tt.wantWarnCount)
 			}
-			if !reflect.DeepEqual(len(gotErrors), tt.wantErrorCount) {
+			if gotErrors != tt.wantErrorCount {
 				t.Errorf("validateMethodWord() gotErrors = %v, want %v", gotErrors, tt.wantErrorCount)
 			}
 		})

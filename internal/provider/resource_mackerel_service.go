@@ -20,10 +20,12 @@ func resourceMackerelService() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validation.StringMatch(regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`), "must contain only alphanumeric characters, dashes, and underscores"),
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateDiagFunc: validateDiagFunc(
+					validation.StringMatch(regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`),
+						"must contain only alphanumeric characters, dashes, and underscores")),
 			},
 			"memo": {
 				Type:     schema.TypeString,

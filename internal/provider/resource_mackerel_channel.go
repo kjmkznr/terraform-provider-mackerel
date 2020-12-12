@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -24,7 +23,7 @@ func resourceMackerelChannel() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				ValidateFunc: validation.StringInSlice([]string{
+				ValidateDiagFunc: stringInSliceDiag([]string{
 					"email",
 					"slack",
 					"webhook",

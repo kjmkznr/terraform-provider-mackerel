@@ -27,9 +27,9 @@ func resourceMackerelDashboard() *schema.Resource {
 				Required: true,
 			},
 			"url_path": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateUrlPathWord,
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: validateUrlPathWordDiag(),
 			},
 		},
 	}

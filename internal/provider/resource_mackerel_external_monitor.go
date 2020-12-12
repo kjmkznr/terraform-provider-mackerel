@@ -76,15 +76,15 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 				Optional: true,
 			},
 			"method": {
-				Type:         schema.TypeString,
-				Default:      http.MethodGet,
-				Optional:     true,
-				ValidateFunc: validateMethodWord,
+				Type:             schema.TypeString,
+				Default:          http.MethodGet,
+				Optional:         true,
+				ValidateDiagFunc: validateMethodWordDiag(),
 			},
 			"memo": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.StringLenBetween(0, 250),
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateDiagFunc: validateDiagFunc(validation.StringLenBetween(0, 250)),
 			},
 			"request_body": {
 				Type:     schema.TypeString,
