@@ -125,7 +125,7 @@ func testAccCheckMackerelChannelDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckMackerelChannelExists(resouceName string) resource.TestCheckFunc {
+func testAccCheckMackerelChannelExists(resourceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*mackerel.Client)
 
@@ -144,7 +144,7 @@ func testAccCheckMackerelChannelExists(resouceName string) resource.TestCheckFun
 				}
 			}
 		}
-		return fmt.Errorf("channel (%s) not found", resouceName)
+		return fmt.Errorf("channel (%s) not found", resourceName)
 	}
 }
 
