@@ -170,7 +170,7 @@ func testAccCheckMackerelExternalMonitorDestroy(s *terraform.State) error {
 		}
 		for _, monitor := range monitors {
 			if monitor.MonitorID() == rs.Primary.ID {
-				return fmt.Errorf("Monitor still exists")
+				return fmt.Errorf("monitor still exists")
 			}
 		}
 	}
