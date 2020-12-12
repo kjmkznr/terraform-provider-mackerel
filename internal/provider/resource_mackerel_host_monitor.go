@@ -3,8 +3,8 @@ package provider
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/mackerelio/mackerel-client-go"
 )
@@ -119,7 +119,6 @@ func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) e
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "host" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorHostMetric)
-			_ = d.Set("id", mon.ID)
 			_ = d.Set("name", mon.Name)
 			_ = d.Set("duration", mon.Duration)
 			_ = d.Set("metric", mon.Metric)
@@ -180,7 +179,6 @@ func resourceMackerelHostMonitorDelete(d *schema.ResourceData, meta interface{})
 	}
 
 	log.Printf("[DEBUG] mackerel monitor %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

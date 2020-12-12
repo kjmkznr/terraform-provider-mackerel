@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -105,13 +105,23 @@ func resourceMackerelChannelRead(d *schema.ResourceData, meta interface{}) error
 
 	for _, channel := range channels {
 		if channel.ID == d.Id() {
-			_ = d.Set("id", channel.ID)
 			_ = d.Set("name", channel.Name)
 			_ = d.Set("type", channel.Type)
 			_ = d.Set("url", channel.URL)
 			_ = d.Set("enabled_graph_image", channel.EnabledGraphImage)
 			_ = d.Set("user_ids", channel.UserIDs)
-			_ = d.Set("mentions", channel.Mentions)
+
+			var mentions = map[string]string{}
+			if ok := channel.Mentions.OK; ok != "" {
+				mentions["ok"] = ok
+			}
+			if crit := channel.Mentions.Critical; crit != "" {
+				mentions["critical"] = crit
+			}
+			if warn := channel.Mentions.Warning; warn != "" {
+				mentions["warning"] = warn
+			}
+			_ = d.Set("mentions", mentions)
 			_ = d.Set("events", channel.Events)
 			break
 		}
@@ -129,7 +139,6 @@ func resourceMackerelChannelDelete(d *schema.ResourceData, meta interface{}) err
 	}
 
 	log.Printf("[DEBUG] mackerel channel %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

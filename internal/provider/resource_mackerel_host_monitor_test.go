@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -14,9 +14,9 @@ func TestAccMackerelHostMonitor_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelHostMonitorConfigBasic(rName),
@@ -51,9 +51,9 @@ func TestAccMackerelHostMonitor_Update(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelHostMonitorConfigBasic(rName),
@@ -113,9 +113,9 @@ func TestAccMackerelHostMonitor_Minimum(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestHostMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelHostMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelHostMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelHostMonitorConfigMinimum(rName),

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -126,7 +126,6 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "external" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorExternalHTTP)
-			_ = d.Set("id", mon.MonitorID())
 			_ = d.Set("name", mon.MonitorName())
 			_ = d.Set("url", mon.URL)
 			_ = d.Set("service", mon.Service)
@@ -143,7 +142,7 @@ func resourceMackerelExternalMonitorRead(d *schema.ResourceData, meta interface{
 			_ = d.Set("method", mon.Method)
 			_ = d.Set("memo", mon.Memo)
 			_ = d.Set("request_body", mon.RequestBody)
-			_ = d.Set("headers", mon.Headers)
+			_ = d.Set("headers", expandHeaders(mon.Headers))
 			break
 		}
 	}
@@ -173,7 +172,6 @@ func resourceMackerelExternalMonitorDelete(d *schema.ResourceData, meta interfac
 	}
 
 	log.Printf("[DEBUG] mackerel monitor %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }
@@ -229,6 +227,8 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 	}
 	if v, ok := d.GetOk("headers"); ok {
 		input.Headers = readHeaders(v.(map[string]interface{}))
+	} else {
+		input.Headers = []mackerel.HeaderField{}
 	}
 
 	return input
@@ -242,6 +242,15 @@ func readHeaders(h map[string]interface{}) []mackerel.HeaderField {
 			Value: v.(string),
 		}
 		headers = append(headers, header)
+	}
+
+	return headers
+}
+
+func expandHeaders(headerFields []mackerel.HeaderField) map[string]string {
+	var headers = map[string]string{}
+	for _, h := range headerFields {
+		headers[h.Name] = h.Value
 	}
 
 	return headers

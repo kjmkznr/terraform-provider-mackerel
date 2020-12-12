@@ -3,7 +3,7 @@ package provider
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -99,7 +99,6 @@ func resourceMackerelDashboardDelete(d *schema.ResourceData, meta interface{}) e
 	}
 
 	log.Printf("[DEBUG] mackerel dashboard %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

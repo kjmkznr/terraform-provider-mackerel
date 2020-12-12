@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -14,9 +14,9 @@ func TestAccMackerelDashboard_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestDashboard-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelDashboardDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelDashboardConfigBasic(rName),
@@ -37,9 +37,9 @@ func TestAccMackerelDashboard_Update(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestDashboard-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelDashboardDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelDashboardDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelDashboardConfigBasic(rName),

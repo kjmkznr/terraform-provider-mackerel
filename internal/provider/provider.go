@@ -1,8 +1,10 @@
 package provider
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 const (
@@ -10,7 +12,7 @@ const (
 )
 
 // Provider returns a terraform.ResourceProvider.
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"api_key": {
@@ -29,14 +31,19 @@ func Provider() terraform.ResourceProvider {
 			"mackerel_service":            resourceMackerelService(),
 			"mackerel_channel":            resourceMackerelChannel(),
 		},
-		ConfigureFunc: providerConfigure,
+		ConfigureContextFunc: providerConfigure,
 	}
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	var diags diag.Diagnostics
 	config := Config{
 		ApiKey: d.Get("api_key").(string),
 	}
 
-	return config.NewClient()
+	c, err := config.NewClient()
+	if err != nil {
+		diag.FromErr(err)
+	}
+	return c, diags
 }

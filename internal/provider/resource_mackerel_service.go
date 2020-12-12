@@ -4,8 +4,8 @@ import (
 	"log"
 	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -82,7 +82,6 @@ func resourceMackerelServiceDelete(d *schema.ResourceData, meta interface{}) err
 	}
 
 	log.Printf("[DEBUG] mackerel service %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -14,9 +14,9 @@ func TestAccMackerelServiceMonitor_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelServiceMonitorConfigBasic(rName),
@@ -53,9 +53,9 @@ func TestAccMackerelServiceMonitor_Update(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelServiceMonitorConfigBasic(rName),
@@ -119,9 +119,9 @@ func TestAccMackerelServiceMonitor_Minimum(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestServiceMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelServiceMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelServiceMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelServiceMonitorConfigMinimum(rName),

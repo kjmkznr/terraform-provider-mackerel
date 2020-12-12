@@ -6,9 +6,9 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -17,9 +17,9 @@ func TestAccMackerelChannelEmail_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestChannelEmail-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelChannelDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelChannelDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelChannelEmailConfigBasic(rName),
@@ -40,9 +40,9 @@ func TestAccMackerelChannelEmail_Invalid(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestChannelEmail-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelChannelDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelChannelDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccMackerelChannelEmailConfigInvalid(rName),
@@ -57,9 +57,9 @@ func TestAccMackerelChannelSlack_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestChannelSlack-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelChannelDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelChannelDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelChannelSlackConfigBasic(rName),
@@ -83,9 +83,9 @@ func TestAccMackerelChannelWebhook_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestChannelWebhook-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelChannelDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelChannelDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMackerelChannelWebhookConfigBasic(rName),

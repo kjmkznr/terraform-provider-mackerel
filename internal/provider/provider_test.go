@@ -1,35 +1,45 @@
 package provider
 
 import (
+	"context"
 	"os"
+	"sync"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var testAccProviders map[string]terraform.ResourceProvider
+const providerName = "mackerel"
+
 var testAccProvider *schema.Provider
+var testAccProviderFactories map[string]func() (*schema.Provider, error)
+
+var testAccProviderConfigure sync.Once
 
 func init() {
-	testAccProvider = Provider().(*schema.Provider)
-	testAccProviders = map[string]terraform.ResourceProvider{
-		"mackerel": testAccProvider,
+	testAccProvider = Provider()
+	testAccProviderFactories = map[string]func() (*schema.Provider, error){
+		providerName: func() (*schema.Provider, error) {
+			return Provider(), nil
+		},
 	}
 }
 
 func TestProvider(t *testing.T) {
-	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
+	if err := Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 }
 
-func TestProvider_impl(t *testing.T) {
-	var _ terraform.ResourceProvider = Provider()
-}
-
 func testAccPreCheck(t *testing.T) {
-	if v := os.Getenv("MACKEREL_API_KEY"); v == "" {
-		t.Fatal("MACKEREL_API_KEY must be set for acceptance tests")
-	}
+	testAccProviderConfigure.Do(func() {
+		if v := os.Getenv("MACKEREL_API_KEY"); v == "" {
+			t.Fatal("MACKEREL_API_KEY must be set for acceptance tests")
+		}
+		err := testAccProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(nil))
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
 }
