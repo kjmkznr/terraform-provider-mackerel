@@ -14,7 +14,7 @@ func resourceMackerelDashboard() *schema.Resource {
 		Update: resourceMackerelDashboardUpdate,
 		Delete: resourceMackerelDashboardDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
