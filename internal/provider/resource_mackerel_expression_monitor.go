@@ -13,6 +13,7 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 		Read:   resourceMackerelExpressionMonitorRead,
 		Update: resourceMackerelExpressionMonitorUpdate,
 		Delete: resourceMackerelExpressionMonitorDelete,
+		Exists: resourceMackerelExpressionMonitorExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -123,6 +124,22 @@ func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interf
 
 	log.Printf("[DEBUG] mackerel monitor %q updated.", d.Id())
 	return resourceMackerelExpressionMonitorRead(d, meta)
+}
+
+func resourceMackerelExpressionMonitorExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	monitors, err := client.FindMonitors()
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range monitors {
+		if m.MonitorType() == "expression" && m.MonitorID() == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelExpressionMonitorDelete(d *schema.ResourceData, meta interface{}) error {
