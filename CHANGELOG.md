@@ -1,3 +1,9 @@
+## 0.3.4 (2020-12-19)
+
+BUGFIX
+
+* Add Exists func for resources ([#47](https://github.com/kjmkznr/terraform-provider-mackerel/pull/47))
+
 ## 0.3.3 (2020-11-22)
 
 FEATURES
