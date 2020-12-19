@@ -15,6 +15,7 @@ func resourceMackerelChannel() *schema.Resource {
 		Create: resourceMackerelChannelCreate,
 		Read:   resourceMackerelChannelRead,
 		Delete: resourceMackerelChannelDelete,
+		Exists: resourceMackerelChannelExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -118,6 +119,22 @@ func resourceMackerelChannelRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	return nil
+}
+
+func resourceMackerelChannelExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	channels, err := client.FindChannels()
+	if err != nil {
+		return false, err
+	}
+
+	for _, c := range channels {
+		if c.ID == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelChannelDelete(d *schema.ResourceData, meta interface{}) error {

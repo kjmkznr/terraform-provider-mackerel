@@ -14,6 +14,7 @@ func resourceMackerelService() *schema.Resource {
 		Create: resourceMackerelServiceCreate,
 		Read:   resourceMackerelServiceRead,
 		Delete: resourceMackerelServiceDelete,
+		Exists: resourceMackerelServiceExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -71,6 +72,22 @@ func resourceMackerelServiceRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	return nil
+}
+
+func resourceMackerelServiceExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	services, err := client.FindServices()
+	if err != nil {
+		return false, err
+	}
+
+	for _, s := range services {
+		if s.Name == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelServiceDelete(d *schema.ResourceData, meta interface{}) error {

@@ -14,6 +14,7 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 		Read:   resourceMackerelServiceMonitorRead,
 		Update: resourceMackerelServiceMonitorUpdate,
 		Delete: resourceMackerelServiceMonitorDelete,
+		Exists: resourceMackerelServiceMonitorExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -161,6 +162,22 @@ func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface
 
 	log.Printf("[DEBUG] mackerel monitor %q updated.", d.Id())
 	return resourceMackerelServiceMonitorRead(d, meta)
+}
+
+func resourceMackerelServiceMonitorExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	monitors, err := client.FindMonitors()
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range monitors {
+		if m.MonitorType() == "service" && m.MonitorID() == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelServiceMonitorDelete(d *schema.ResourceData, meta interface{}) error {

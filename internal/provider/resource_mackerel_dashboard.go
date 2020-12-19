@@ -13,6 +13,7 @@ func resourceMackerelDashboard() *schema.Resource {
 		Read:   resourceMackerelDashboardRead,
 		Update: resourceMackerelDashboardUpdate,
 		Delete: resourceMackerelDashboardDelete,
+		Exists: resourceMackerelDashboardExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -88,6 +89,22 @@ func resourceMackerelDashboardUpdate(d *schema.ResourceData, meta interface{}) e
 
 	log.Printf("[DEBUG] mackerel dashboard %q updated.", d.Id())
 	return resourceMackerelDashboardRead(d, meta)
+}
+
+func resourceMackerelDashboardExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	dashboards, err := client.FindDashboards()
+	if err != nil {
+		return false, err
+	}
+
+	for _, dashboard := range dashboards {
+		if dashboard.ID == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelDashboardDelete(d *schema.ResourceData, meta interface{}) error {
