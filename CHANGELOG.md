@@ -1,5 +1,7 @@
 ## 0.3.3 (2020-11-22)
 
+FEATURES
+
 * **New Resource:** `mackerel_channel` ([#39](https://github.com/kjmkznr/terraform-provider-mackerel/pull/39))
 
 ENHANCEMENTS
@@ -7,7 +9,6 @@ ENHANCEMENTS
 * Add missingDurtionWarning, missingDurationCritical in `mackerel_service_monitor` ([#38](https://github.com/kjmkznr/terraform-provider-mackerel/pull/38))
 
 ## 0.3.2 (2020-09-15)
-
 
 ENHANCEMENTS
 
