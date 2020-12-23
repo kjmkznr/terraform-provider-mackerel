@@ -15,6 +15,7 @@ func resourceMackerelHostMonitor() *schema.Resource {
 		Read:   resourceMackerelHostMonitorRead,
 		Update: resourceMackerelHostMonitorUpdate,
 		Delete: resourceMackerelHostMonitorDelete,
+		Exists: resourceMackerelHostMonitorExists,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -168,6 +169,22 @@ func resourceMackerelHostMonitorUpdate(d *schema.ResourceData, meta interface{})
 
 	log.Printf("[DEBUG] mackerel monitor %q updated.", d.Id())
 	return resourceMackerelHostMonitorRead(d, meta)
+}
+
+func resourceMackerelHostMonitorExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	monitors, err := client.FindMonitors()
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range monitors {
+		if m.MonitorType() == "host" && m.MonitorID() == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelHostMonitorDelete(d *schema.ResourceData, meta interface{}) error {

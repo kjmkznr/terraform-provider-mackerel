@@ -15,6 +15,7 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 		Read:   resourceMackerelExternalMonitorRead,
 		Update: resourceMackerelExternalMonitorUpdate,
 		Delete: resourceMackerelExternalMonitorDelete,
+		Exists: resourceMackerelExternalMonitorExists,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
@@ -161,6 +162,22 @@ func resourceMackerelExternalMonitorUpdate(d *schema.ResourceData, meta interfac
 
 	log.Printf("[DEBUG] mackerel monitor %q updated.", d.Id())
 	return resourceMackerelExternalMonitorRead(d, meta)
+}
+
+func resourceMackerelExternalMonitorExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
+	client := meta.(*mackerel.Client)
+	monitors, err := client.FindMonitors()
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range monitors {
+		if m.MonitorType() == "external" && m.MonitorID() == d.Id() {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func resourceMackerelExternalMonitorDelete(d *schema.ResourceData, meta interface{}) error {
