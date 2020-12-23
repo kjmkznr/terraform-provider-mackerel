@@ -4,8 +4,8 @@ import (
 	"log"
 	"regexp"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -16,15 +16,17 @@ func resourceMackerelService() *schema.Resource {
 		Delete: resourceMackerelServiceDelete,
 		Exists: resourceMackerelServiceExists,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validation.StringMatch(regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`), "must contain only alphanumeric characters, dashes, and underscores"),
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateDiagFunc: validateDiagFunc(
+					validation.StringMatch(regexp.MustCompile(`^[a-zA-Z0-9\-\_]+$`),
+						"must contain only alphanumeric characters, dashes, and underscores")),
 			},
 			"memo": {
 				Type:     schema.TypeString,
@@ -99,7 +101,6 @@ func resourceMackerelServiceDelete(d *schema.ResourceData, meta interface{}) err
 	}
 
 	log.Printf("[DEBUG] mackerel service %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

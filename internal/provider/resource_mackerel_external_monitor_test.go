@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -14,9 +14,9 @@ func TestAccMackerelExternalMonitor_Basic(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelExternalMonitorConfigBasic(rName),
@@ -63,9 +63,9 @@ func TestAccMackerelExternalMonitor_Update(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelExternalMonitorConfigBasic(rName),
@@ -139,9 +139,9 @@ func TestAccMackerelExternalMonitor_Minimum(t *testing.T) {
 	rName := acctest.RandomWithPrefix("TerraformTestExternalMonitor-")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMackerelExternalMonitorDestroy,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      testAccCheckMackerelExternalMonitorDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckMackerelExternalMonitorConfigMinimum(rName),
@@ -170,7 +170,7 @@ func testAccCheckMackerelExternalMonitorDestroy(s *terraform.State) error {
 		}
 		for _, monitor := range monitors {
 			if monitor.MonitorID() == rs.Primary.ID {
-				return fmt.Errorf("Monitor still exists")
+				return fmt.Errorf("monitor still exists")
 			}
 		}
 	}

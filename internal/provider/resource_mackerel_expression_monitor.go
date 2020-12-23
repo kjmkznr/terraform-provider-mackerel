@@ -3,7 +3,7 @@ package provider
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -15,7 +15,7 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 		Delete: resourceMackerelExpressionMonitorDelete,
 		Exists: resourceMackerelExpressionMonitorExists,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -88,7 +88,6 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "expression" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorExpression)
-			_ = d.Set("id", mon.MonitorID())
 			_ = d.Set("name", mon.MonitorName())
 			_ = d.Set("expression", mon.Expression)
 			_ = d.Set("operator", mon.Operator)
@@ -151,7 +150,6 @@ func resourceMackerelExpressionMonitorDelete(d *schema.ResourceData, meta interf
 	}
 
 	log.Printf("[DEBUG] mackerel monitor %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

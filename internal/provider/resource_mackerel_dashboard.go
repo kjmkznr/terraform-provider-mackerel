@@ -3,7 +3,7 @@ package provider
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -15,7 +15,7 @@ func resourceMackerelDashboard() *schema.Resource {
 		Delete: resourceMackerelDashboardDelete,
 		Exists: resourceMackerelDashboardExists,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -28,9 +28,9 @@ func resourceMackerelDashboard() *schema.Resource {
 				Required: true,
 			},
 			"url_path": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateUrlPathWord,
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: validateUrlPathWordDiag(),
 			},
 		},
 	}
@@ -116,7 +116,6 @@ func resourceMackerelDashboardDelete(d *schema.ResourceData, meta interface{}) e
 	}
 
 	log.Printf("[DEBUG] mackerel dashboard %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

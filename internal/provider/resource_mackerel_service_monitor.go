@@ -3,8 +3,8 @@ package provider
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
@@ -16,7 +16,7 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 		Delete: resourceMackerelServiceMonitorDelete,
 		Exists: resourceMackerelServiceMonitorExists,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -61,10 +61,10 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 				Optional: true,
 			},
 			"max_check_attempts": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validation.IntBetween(1, 10),
-				Default:      1,
+				Type:             schema.TypeInt,
+				Optional:         true,
+				ValidateDiagFunc: validateDiagFunc(validation.IntBetween(1, 10)),
+				Default:          1,
 			},
 			"is_mute": {
 				Type:     schema.TypeBool,
@@ -116,7 +116,6 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 	for _, monitor := range monitors {
 		if monitor.MonitorType() == "service" && monitor.MonitorID() == d.Id() {
 			mon := monitor.(*mackerel.MonitorServiceMetric)
-			_ = d.Set("id", mon.ID)
 			_ = d.Set("name", mon.Name)
 			_ = d.Set("service", mon.Service)
 			_ = d.Set("duration", mon.Duration)
@@ -189,7 +188,6 @@ func resourceMackerelServiceMonitorDelete(d *schema.ResourceData, meta interface
 	}
 
 	log.Printf("[DEBUG] mackerel monitor %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }

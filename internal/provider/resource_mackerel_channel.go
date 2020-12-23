@@ -1,23 +1,23 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mackerelio/mackerel-client-go"
 )
 
 func resourceMackerelChannel() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceMackerelChannelCreate,
-		Read:   resourceMackerelChannelRead,
-		Delete: resourceMackerelChannelDelete,
-		Exists: resourceMackerelChannelExists,
+		CreateContext: resourceMackerelChannelCreate,
+		ReadContext:   resourceMackerelChannelRead,
+		DeleteContext: resourceMackerelChannelDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -25,7 +25,7 @@ func resourceMackerelChannel() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				ValidateFunc: validation.StringInSlice([]string{
+				ValidateDiagFunc: stringInSliceDiag([]string{
 					"email",
 					"slack",
 					"webhook",
@@ -76,77 +76,77 @@ func resourceMackerelChannel() *schema.Resource {
 	}
 }
 
-func resourceMackerelChannelCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelChannelCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*mackerel.Client)
 
 	input, err := buildChannelParameter(d)
 	if err != nil {
-		return err
+		return diag.FromErr(fmt.Errorf("error build channel parameter %w", err))
 	}
 
 	channel, err := client.CreateChannel(input)
 	if err != nil {
-		return err
+		return diag.FromErr(fmt.Errorf("error create channel %w", err))
 	}
 
 	log.Printf("[DEBUG] mackerel channel %q created.", channel.ID)
 	d.SetId(channel.ID)
 
-	return resourceMackerelChannelRead(d, meta)
+	return resourceMackerelChannelRead(ctx, d, meta)
 }
 
-func resourceMackerelChannelRead(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelChannelRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*mackerel.Client)
 
 	log.Printf("[DEBUG] Reading mackerel channel: %q", d.Id())
 	channels, err := client.FindChannels()
 	if err != nil {
-		return err
+		return diag.FromErr(fmt.Errorf("error read channel %w", err))
 	}
 
+	exists := false
 	for _, channel := range channels {
 		if channel.ID == d.Id() {
-			_ = d.Set("id", channel.ID)
+			exists = true
 			_ = d.Set("name", channel.Name)
 			_ = d.Set("type", channel.Type)
 			_ = d.Set("url", channel.URL)
 			_ = d.Set("enabled_graph_image", channel.EnabledGraphImage)
 			_ = d.Set("user_ids", channel.UserIDs)
-			_ = d.Set("mentions", channel.Mentions)
+
+			var mentions = map[string]string{}
+			if ok := channel.Mentions.OK; ok != "" {
+				mentions["ok"] = ok
+			}
+			if crit := channel.Mentions.Critical; crit != "" {
+				mentions["critical"] = crit
+			}
+			if warn := channel.Mentions.Warning; warn != "" {
+				mentions["warning"] = warn
+			}
+			_ = d.Set("mentions", mentions)
 			_ = d.Set("events", channel.Events)
 			break
+		}
+
+		if !exists {
+			// channel is gone
+			d.SetId("")
 		}
 	}
 
 	return nil
 }
 
-func resourceMackerelChannelExists(d *schema.ResourceData, meta interface{}) (b bool, e error) {
-	client := meta.(*mackerel.Client)
-	channels, err := client.FindChannels()
-	if err != nil {
-		return false, err
-	}
-
-	for _, c := range channels {
-		if c.ID == d.Id() {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
-
-func resourceMackerelChannelDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceMackerelChannelDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*mackerel.Client)
 
 	_, err := client.DeleteChannel(d.Id())
 	if err != nil {
-		return err
+		return diag.FromErr(fmt.Errorf("error delete channel %w", err))
 	}
 
 	log.Printf("[DEBUG] mackerel channel %q deleted.", d.Id())
-	d.SetId("")
 
 	return nil
 }
