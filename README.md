@@ -1,5 +1,11 @@
-Terraform provider for mackerel.io
+[DEPRECATED] Terraform provider for mackerel.io
 ==================================
+
+**[DEPRECATED]** Use official [terraform-provider-mackerel](https://github.com/mackerelio-labs/terraform-provider-mackerel)
+
+
+----
+
 
 A [Terraform](https://www.terraform.io/) plugin that provides resources for [mackerel.io](https://mackerel.io/).
 
